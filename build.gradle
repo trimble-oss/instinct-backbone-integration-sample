@@ -19,16 +19,11 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven {
-            url = URI.create("https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-maven")
-            credentials {
-                username = artifactory_user
-                password = artifactory_password
-            }
-        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+version = "0.1"

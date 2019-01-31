@@ -1,3 +1,7 @@
+plugins {
+    id "com.jfrog.artifactory" version "4.7.5"
+}
+
 apply plugin: ("com.android.application")
 apply plugin: ("kotlin-android")
 apply plugin: ("kotlin-android-extensions")
@@ -21,7 +25,7 @@ android {
     }
 }
 
-
+apply from: 'https://www.github.com/geotracsystems/ttm-mep-build-scripts/raw/version/2/ttm_module.gradle'
 
 dependencies {
     implementation (fileTree("dir" : "libs", "include": ["*.jar"]))
@@ -32,13 +36,19 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-extensions:2.0.0")
     implementation ("androidx.lifecycle:lifecycle-reactivestreams-ktx:2.0.0")
     implementation("com.google.android.material:material:1.0.0")
+
+    implementation('com.trimble:ttm-mep-backbone-api:1.0-SNAPSHOT') {
+        changing = true
+    }
+    implementation('com.trimble:ttm-mep-backbone-logging:1.0-SNAPSHOT') {
+        changing = true
+    }
+    implementation ("com.google.code.gson:gson:2.8.5")
+
     testImplementation ("junit:junit:4.12")
     testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0")
     androidTestImplementation ("androidx.test:runner:1.1.1")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.1.1")
-
-    implementation ("com.trimble:ttm-backbone-api:1.0")
-    implementation ("com.google.code.gson:gson:2.8.5")
 
     kapt("androidx.lifecycle:lifecycle-compiler:2.0.0")
 }
