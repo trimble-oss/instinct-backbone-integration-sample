@@ -26,6 +26,7 @@ allprojects {
                 password = tt_artifactory_password
             }
         }
+        maven { url 'https://jitpack.io' }
     }
 }
 
