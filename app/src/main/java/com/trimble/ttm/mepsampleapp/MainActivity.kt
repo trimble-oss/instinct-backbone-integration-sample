@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.anychart.AnyChart.box
 import com.anychart.chart.common.dataentry.BoxDataEntry
+import com.trimble.ttm.mepsampleapp.view.Trip
 import kotlinx.android.synthetic.main.activity_main.*
 
 enum class IGNITION_STATE {
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         speedometer.speedTo(50f)
 
-        gear.currentProgress = 3
+        trip.set(Trip(3723, 42))
         setIgnintionTo(IGNITION_STATE.ACCESSORY)
 
         latency_chart.setChart(box().apply {
