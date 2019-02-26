@@ -18,58 +18,25 @@
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toStartOf="@+id/speedometer"
             android:layout_marginEnd="64dp"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/ignition_container"
+    <TextView
+            android:id="@+id/ignition_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Ignition"
+            app:layout_constraintBottom_toTopOf="@+id/ignition"
+            app:layout_constraintStart_toStartOf="@id/ignition"
+            app:layout_constraintEnd_toEndOf="@id/ignition"/>
+
+    <com.trimble.ttm.mepsampleapp.view.IgnitionView
+            android:id="@+id/ignition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/speedometer"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-                android:id="@+id/ignition_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Ignition"
-                app:layout_constraintBottom_toTopOf="@+id/engine_on"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <ImageView
-                android:id="@+id/engine_on"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="32dp"
-                android:contentDescription="engine on light"
-                app:layout_constraintBottom_toTopOf="@+id/accessory"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/off_circle"/>
-
-        <ImageView
-                android:id="@+id/accessory"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="32dp"
-                android:contentDescription="ignition accessory"
-                app:layout_constraintBottom_toTopOf="@+id/ignition_off"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/off_circle"/>
-
-        <ImageView
-                android:id="@+id/ignition_off"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:contentDescription="engine off light"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/off_circle"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginStart="8dp"/>
 
     <TextView
             android:id="@+id/trip_label"
