@@ -21,8 +21,10 @@ class MainActivity : AppCompatActivity() {
         model.ignition.observe(this, Observer {
             ignition.set(it)
         })
-        
-        speedometer.speedTo(50f)
+
+        model.speed.observe(this, Observer {
+            speedometer.speedTo(it)
+        })
 
         trip.set(Trip(3723, 42))
 
