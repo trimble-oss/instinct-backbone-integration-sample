@@ -18,9 +18,22 @@ The API Key section should appear. Press the "Copy key to clipboard" button.
 
 ![alt text](doc/api-key.png "Artifactory api key")
 
-Open your [gradle.properties](https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties) file and create 2 properties. The first, `tt_artifactory_username`, is the email address used to login to Artifactory. The second, `tt_artifactory_password`, is the long api key in your clipboard.
+Edit your [gradle.properties](https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties) file.
+Gradle will look for that file in the following places:
+* gradle.properties in project root directory.
+* gradle.properties in `GRADLE_USER_HOME` directory.
+
+If `GRADLE_USER_HOME` environment variable is not set, it will be defaulted to `USER_HOME/.gradle`. This is `C:\Users\<your user name>\.gradle` on Windows.
+
+If you've never used Gradle before, you will have to create this file. You need to add 2 properties. The first, `tt_artifactory_username`, is the email address used to login to Artifactory. The second, `tt_artifactory_password`, is the long api key in your clipboard:
 
 ```gradle
+...
+# Automatically convert third-party libraries to use AndroidX
+android.enableJetifier=true
+# Kotlin code style for this project: "official" or "obsolete":
+kotlin.code.style=official
+# Trimble Artifactory credentials
 tt_artifactory_username=michael_bayles@trimble.com
 tt_artifactory_password=************
 ```
