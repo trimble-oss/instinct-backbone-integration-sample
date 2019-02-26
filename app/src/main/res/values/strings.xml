@@ -4,6 +4,4 @@
     <string name="read_gps">Read GPS</string>
     <string name="double_default">0.0</string>
     <string name="longitude">Longitude</string>
-    <string name="start_gps_stream">Start GPS Stream</string>
-    <string name="stop_gps_stream">Stop GPS Stream</string>
 </resources>

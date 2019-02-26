@@ -40,5 +40,5 @@ dependencies {
     implementation 'com.trimble:ttm-mep-backbone-logging:1.0'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'io.mockk:mockk:1.9.1'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0'
 }
