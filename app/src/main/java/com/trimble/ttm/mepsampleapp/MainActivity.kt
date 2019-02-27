@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.anychart.AnyChart.box
-import com.anychart.chart.common.dataentry.BoxDataEntry
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -27,17 +25,6 @@ class MainActivity : AppCompatActivity() {
 
         model.trip.observe(this, Observer {
             trip.set(it)
-        })
-
-        latency_chart.setChart(box().apply {
-            box(listOf(BoxDataEntry("Latency (ms)", 2000, 2120, 2300, 2430, 2500))).apply {
-                normal().apply {
-                    fill("#00e6e6")
-                    medianStroke("white", 4, "10 0", "miter", "butt")
-                }
-                selected().fill("#00e6e6")
-            }
-            background().fill("#151616")
         })
     }
 }

@@ -8,7 +8,7 @@
                                                    android:background="@color/colorBackground"
                                                    tools:context=".MainActivity">
 
-    <com.anychart.AnyChartView
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/latency_chart"
             android:layout_width="0dp"
             android:layout_height="match_parent"
