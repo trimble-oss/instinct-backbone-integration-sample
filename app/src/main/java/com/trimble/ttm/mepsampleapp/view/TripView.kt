@@ -12,8 +12,6 @@ data class Trip(val durationSeconds: Long, val distanceKm: Int) {
         .append(durationSeconds / 3600)
         .append(":")
         .append((durationSeconds % 3600 / 60).padZero(2))
-        .append(":")
-        .append((durationSeconds % 60).padZero(2))
         .toString()
 
     val distance: String = "${distanceKm.padZero(4)} km"
