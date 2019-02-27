@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.anychart.AnyChart.box
 import com.anychart.chart.common.dataentry.BoxDataEntry
-import com.trimble.ttm.mepsampleapp.view.Trip
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +25,9 @@ class MainActivity : AppCompatActivity() {
             speedometer.speedTo(it)
         })
 
-        trip.set(Trip(3723, 42))
+        model.trip.observe(this, Observer {
+            trip.set(it)
+        })
 
         latency_chart.setChart(box().apply {
             box(listOf(BoxDataEntry("Latency (ms)", 2000, 2120, 2300, 2430, 2500))).apply {
