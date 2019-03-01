@@ -42,6 +42,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/speedometer"
+            app:vertical="true"
             android:layout_marginStart="8dp"/>
 
     <TextView

@@ -48,6 +48,7 @@
                 app:layout_constraintBottom_toTopOf="@id/speedometer"
                 app:layout_constraintEnd_toEndOf="@id/speedometer"
                 app:layout_constraintStart_toStartOf="@+id/speedometer"
+                app:vertical="false"
                 android:layout_marginBottom="32dp"/>
 
         <TextView

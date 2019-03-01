@@ -7,4 +7,7 @@
         <attr name="medianColor" format="color"/>
         <attr name="medianWidth" format="float"/>
     </declare-styleable>
+    <declare-styleable name="IgnitionView">
+        <attr name="vertical" format="boolean"/>
+    </declare-styleable>
 </resources>

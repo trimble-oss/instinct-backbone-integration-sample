@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.trimble.ttm.mepsampleapp.R
-import kotlinx.android.synthetic.main.ignition_layout.view.*
+import kotlinx.android.synthetic.main.ignition_horizontal_layout.view.*
 
 enum class IgnitionState {
     OFF,
@@ -15,7 +15,14 @@ enum class IgnitionState {
 
 class IgnitionView(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
     init {
-        View.inflate(context, R.layout.ignition_layout, this)
+        context.theme.obtainStyledAttributes(attrs, R.styleable.IgnitionView, 0, 0).apply {
+            val layout = getBoolean(R.styleable.IgnitionView_vertical, true).let { vertical ->
+                if (vertical) R.layout.ignition_vertical_layout
+                else R.layout.ignition_horizontal_layout
+            }
+            View.inflate(context, layout, this@IgnitionView)
+        }
+
         set(IgnitionState.OFF)
     }
 
