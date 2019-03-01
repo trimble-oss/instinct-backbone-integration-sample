@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.trimble.ttm.mepsampleapp.view.BoxData
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +27,8 @@ class MainActivity : AppCompatActivity() {
             trip.set(it)
         })
 
-        latency_chart.set(BoxData(2F, 2.1F, 2.4F, 3.8F, 4.8F))
+        model.latency.observe(this, Observer {
+            latency_chart.set(it)
+        })
     }
 }

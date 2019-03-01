@@ -50,6 +50,7 @@ class BoxChart(context: Context, attrs: AttributeSet? = null) : CandleStickChart
         xAxis.isEnabled = false
 
         data = CandleData(dataSet)
+        set(BoxData(0f, 0f, 0f, 0f, 0f))
     }
 
     fun set(boxData: BoxData) {
