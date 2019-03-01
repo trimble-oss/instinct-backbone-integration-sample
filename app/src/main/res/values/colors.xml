@@ -8,4 +8,5 @@
     <color name="colorAccessory">#FFEB3B</color>
     <color name="colorIgnitionOff">#F44336</color>
     <color name="colorEngineOn">#7DEE01</color>
+    <color name="colorText">@android:color/white</color>
 </resources>
