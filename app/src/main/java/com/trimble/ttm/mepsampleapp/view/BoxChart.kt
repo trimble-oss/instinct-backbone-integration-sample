@@ -15,6 +15,16 @@ import com.trimble.ttm.mepsampleapp.R
 
 data class BoxData(val min: Float, val q1: Float, val median: Float, val q3: Float, val max: Float)
 
+/**
+ * BoxChart is an Android View of interquartile data
+ *
+ * There are a few attributes that can be set on the Views XML
+ *      medianColor
+ *      medianWidth
+ *      textColor
+ *      whiskerColor
+ *      boxColor
+ */
 class BoxChart(context: Context, attrs: AttributeSet? = null) : CandleStickChart(context, attrs) {
     @ColorInt
     private var medianColor: Int = Color.WHITE
@@ -27,6 +37,7 @@ class BoxChart(context: Context, attrs: AttributeSet? = null) : CandleStickChart
     }
 
     init {
+        //Use BoxData attributes to set styling of CandleStickChart
         context.theme.obtainStyledAttributes(attrs, R.styleable.BoxChart, 0, 0).apply {
             medianColor = getColor(R.styleable.BoxChart_medianColor, medianColor)
             medianWidth = getFloat(R.styleable.BoxChart_medianWidth, medianWidth)
@@ -39,6 +50,7 @@ class BoxChart(context: Context, attrs: AttributeSet? = null) : CandleStickChart
 
         }
 
+        //Turn off unused CandleStickChart settings
         setTouchEnabled(false)
         isDragEnabled = false
         isDoubleTapToZoomEnabled = false
@@ -49,16 +61,23 @@ class BoxChart(context: Context, attrs: AttributeSet? = null) : CandleStickChart
         axisRight.isEnabled = false
         xAxis.isEnabled = false
 
+        //Set the CandleStickChart data to modifiable dataSet
         data = CandleData(dataSet)
+
+        //Set initial BoxData
         set(BoxData(0f, 0f, 0f, 0f, 0f))
     }
 
+    //Set the BoxData of the BoxChart
     fun set(boxData: BoxData) {
+        //Update data to match boxData
         dataSet.entry = CandleEntry(boxData.median, boxData.max, boxData.min, boxData.q1, boxData.q3)
         axisLeft.limit = LimitLine(boxData.median, "").apply {
             lineColor = medianColor
             lineWidth = medianWidth
         }
+
+        //Redraw view
         data.notifyDataChanged()
         notifyDataSetChanged()
         invalidate()
