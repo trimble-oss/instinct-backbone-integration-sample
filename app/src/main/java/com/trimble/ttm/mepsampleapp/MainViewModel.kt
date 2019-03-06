@@ -45,7 +45,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     val latency: LiveData<BoxData> = backbone.monitorFetch(GPS_DEGREES_KEY)
         .scan(Latency(1000)) { latency, _ -> latency.apply { add(SystemClock.uptimeMillis()) } }
-        .sample(1, MINUTES)
         .map { latency -> latency.data }
         .toLiveData()
 

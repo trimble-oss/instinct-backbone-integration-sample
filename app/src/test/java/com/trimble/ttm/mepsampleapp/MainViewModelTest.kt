@@ -15,8 +15,6 @@ import com.trimble.ttm.mepsampleapp.view.IgnitionState
 import com.trimble.ttm.mepsampleapp.view.Trip
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
@@ -196,7 +194,6 @@ class MainViewModelLatencyTest {
     @RelaxedMockK
     private lateinit var observer: Observer<BoxData>
 
-    private val scheduler = TestScheduler()
     private val backboneDataSubject = PublishSubject.create<BackboneData>()
 
     @Before
@@ -212,8 +209,6 @@ class MainViewModelLatencyTest {
         }
         every { BackboneFactory.rxBackbone(any()) } returns backbone
         every { SystemClock.uptimeMillis() } returns 0
-
-        RxJavaPlugins.setComputationSchedulerHandler { scheduler }
     }
 
     @After
@@ -222,51 +217,19 @@ class MainViewModelLatencyTest {
     }
 
     @Test
-    fun `latency should have time added each time gps emitted`() {
-        mockkConstructor(Latency::class)
-        every { SystemClock.uptimeMillis() } returns 12 andThen 15 andThen 16
-
+    fun `should emit BoxData when latency observed`() {
         MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
 
-        backboneDataSubject.apply {
-            onNext(BackboneData("", Date()))
-            onNext(BackboneData("", Date()))
-            onNext(BackboneData("", Date()))
-        }
-
-        verifyOrder {
-            anyConstructed<Latency>().add(12)
-            anyConstructed<Latency>().add(15)
-            anyConstructed<Latency>().add(16)
-        }
+        verify(exactly = 1) { observer.onChanged(any()) }
     }
 
     @Test
-    fun `latency should emit boxData after a minute`() {
+    fun `should emit BoxData when data emitted`() {
         MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
 
-        scheduler.advanceTimeBy(1, MINUTES)
+        backboneDataSubject.onNext(BackboneData("", Date()))
 
-        verify { observer.onChanged(BoxData(0f, 0f, 0f, 0f, 0f)) }
+        verify(exactly = 2) { observer.onChanged(any()) }
     }
 
-    @Test
-    fun `latency should emit boxData every minute`() {
-        MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
-
-        scheduler.advanceTimeBy(1, MINUTES)
-        backboneDataSubject.onNext(BackboneData("{$DATA_KEY:\"empty\", $MESSAGE_SENT_TIME_KEY: 1234567890}", Date()))
-        scheduler.advanceTimeBy(1, MINUTES)
-
-        verify(exactly = 2) { observer.onChanged(BoxData(0f, 0f, 0f, 0f, 0f)) }
-    }
-
-    @Test
-    fun `latency should not emit boxData before a minute`() {
-        MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
-
-        scheduler.advanceTimeBy(59, SECONDS)
-
-        verify(exactly = 0) { observer.onChanged(any()) }
-    }
 }
