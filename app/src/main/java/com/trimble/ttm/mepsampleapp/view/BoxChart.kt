@@ -71,7 +71,7 @@ class BoxChart(context: Context, attrs: AttributeSet? = null) : CandleStickChart
     //Set the BoxData of the BoxChart
     fun set(boxData: BoxData) {
         //Update data to match boxData
-        dataSet.entry = CandleEntry(boxData.median, boxData.max, boxData.min, boxData.q1, boxData.q3)
+        dataSet.entry = CandleEntry(0f, boxData.max, boxData.min, boxData.q1, boxData.q3)
         axisLeft.limit = LimitLine(boxData.median, "").apply {
             lineColor = medianColor
             lineWidth = medianWidth
