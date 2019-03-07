@@ -3,68 +3,70 @@ package com.trimble.ttm.mepsampleapp
 import com.trimble.ttm.backbone.api.BackboneData
 import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_ODOMETER_KM_KEY
 import com.trimble.ttm.backbone.api.BackboneKeys.TIME_ENGINE_ON_SECONDS_KEY
-import com.trimble.ttm.backbone.api.BackboneResult
 import com.trimble.ttm.backbone.api.DATA_KEY
 import com.trimble.ttm.backbone.api.MESSAGE_SENT_TIME_KEY
 import com.trimble.ttm.mepsampleapp.view.Trip
-import io.reactivex.Observable.just
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
+import org.junit.Before
 import org.junit.Test
 import java.util.*
 
-class TripTest {
-    @Test
-    fun `should not emit Trip when time engine on not available`() {
-        just<BackboneResult>(mapOf(ENGINE_ODOMETER_KM_KEY to odometer(4242.42)))
-            .mapToTrip()
-            .test()
-            .assertNoValues()
-            .assertNoErrors()
+class TripUpdaterTest {
+    private lateinit var tripUpdater: TripUpdater
+
+    @Before
+    fun before() {
+        tripUpdater = TripUpdater()
     }
 
     @Test
-    fun `should emit correct Trip after first result`() {
-        just<BackboneResult>(
+    fun `should return null when time engine on not available`() {
+        val trip = tripUpdater.with(mapOf(ENGINE_ODOMETER_KM_KEY to odometer(4242.42)))
+
+        assertNull(trip)
+    }
+
+    @Test
+    fun `should return Trip after first result`() {
+        val trip = tripUpdater.with(
             mapOf(
                 ENGINE_ODOMETER_KM_KEY to odometer(4242.42),
                 TIME_ENGINE_ON_SECONDS_KEY to timeEngineOn(2)
             )
         )
-            .mapToTrip()
-            .test()
-            .assertValue(Trip(2, 0))
-            .assertNoErrors()
+
+        assertEquals(Trip(2, 0), trip)
     }
 
     @Test
-    fun `should emit correct Trip after multiple results`() {
-        just<BackboneResult>(
+    fun `should return correct Trip after multiple results`() {
+        tripUpdater.with(
             mapOf(
                 ENGINE_ODOMETER_KM_KEY to odometer(4242.42),
                 TIME_ENGINE_ON_SECONDS_KEY to timeEngineOn(2)
-            ),
+            )
+        )
+
+        val trip = tripUpdater.with(
             mapOf(
                 ENGINE_ODOMETER_KM_KEY to odometer(4243.0),
                 TIME_ENGINE_ON_SECONDS_KEY to timeEngineOn(8)
             )
         )
-            .mapToTrip()
-            .skip(1)
-            .test()
-            .assertValue(Trip(8, 1))
-            .assertNoErrors()
+
+        assertEquals(Trip(8, 1), trip)
     }
 
     @Test
-    fun `should emit Trip with zero distance when odometer not available`() {
-        just<BackboneResult>(
+    fun `should return Trip with zero distance when odometer not available`() {
+        val trip = tripUpdater.with(
             mapOf(
                 TIME_ENGINE_ON_SECONDS_KEY to timeEngineOn(2)
             )
         )
-            .mapToTrip()
-            .test()
-            .assertValue(Trip(2, 0))
-            .assertNoErrors()
+
+        assertEquals(Trip(2, 0), trip)
     }
 
     private fun odometer(reading: Double) =

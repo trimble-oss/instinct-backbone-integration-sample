@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.trimble.ttm.backbone.api.BackboneFactory
 import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_ODOMETER_KM_KEY
 import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_ON_KEY
@@ -14,41 +15,57 @@ import com.trimble.ttm.backbone.api.BackboneKeys.TIME_ENGINE_ON_SECONDS_KEY
 import com.trimble.ttm.mepsampleapp.view.BoxData
 import com.trimble.ttm.mepsampleapp.view.IgnitionState
 import com.trimble.ttm.mepsampleapp.view.Trip
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Observable
-import java.util.concurrent.TimeUnit.MINUTES
-import java.util.concurrent.TimeUnit.SECONDS
 
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
-    private val backbone = BackboneFactory.rxBackbone(getApplication())
+    private val backbone = BackboneFactory.callbackBackbone(getApplication())
 
-    val ignition: LiveData<IgnitionState> =
-        backbone.monitorFetch(listOf(IGNITION_KEY, ENGINE_ON_KEY))
-            .map { result ->
-                when {
-                    result[ENGINE_ON_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ENGINE_ON
-                    result[IGNITION_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ACCESSORY
-                    else -> IgnitionState.OFF
-                }
-            }.toLiveData()
+    private val _ignition = MutableLiveData<IgnitionState>()
+    private val _speed = MutableLiveData<Float>()
+    private val _trip = MutableLiveData<Trip>()
+    private val _latency = MutableLiveData<BoxData>()
 
-    val speed: LiveData<Float> =
-        backbone.periodicFetch(2, SECONDS, ENGINE_SPEED_KMH_KEY)
-            .map { it.valueAs<Float>() }
-            .toLiveData()
+    val ignition: LiveData<IgnitionState> = _ignition
+    val speed: LiveData<Float> = _speed
+    val trip: LiveData<Trip> = _trip
+    val latency: LiveData<BoxData> = _latency
 
-    val trip: LiveData<Trip> =
-        backbone.periodicFetch(1, MINUTES, listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY))
-            .mapToTrip()
-            .toLiveData()
+    private val ignitionQuery = backbone.monitorFetch(listOf(IGNITION_KEY, ENGINE_ON_KEY)) { result ->
+        _ignition.postValue(
+            when {
+                result[ENGINE_ON_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ENGINE_ON
+                result[IGNITION_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ACCESSORY
+                else -> IgnitionState.OFF
+            }
+        )
+    }
 
-    val latency: LiveData<BoxData> = backbone.monitorFetch(GPS_DEGREES_KEY)
-        .scan(Latency(1000)) { latency, _ -> latency.apply { add(SystemClock.uptimeMillis()) } }
-        .map { latency -> latency.data }
-        .toLiveData()
+    private val speedQuery = backbone.periodicFetch(2 * 1000, ENGINE_SPEED_KMH_KEY) { result ->
+        _speed.postValue(result.valueAs())
+    }
 
+    private val tripQuery = TripUpdater().let { updateTrip ->
+        backbone.periodicFetch(
+            1 * 60 * 1000,
+            listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY)
+        ) { result ->
+            updateTrip.with(result)?.let { _trip.postValue(it) }
+        }
+    }
 
-    private fun <T> Observable<T>.toLiveData(): LiveData<T> =
-        androidx.lifecycle.LiveDataReactiveStreams.fromPublisher(toFlowable(BackpressureStrategy.ERROR))
+    private val latencyQuery = Latency(1000).let { latencyCalculator ->
+        backbone.monitorFetch(GPS_DEGREES_KEY) {
+            latencyCalculator.add(SystemClock.uptimeMillis())
+            _latency.postValue(latencyCalculator.data)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        ignitionQuery.stop()
+        speedQuery.stop()
+        tripQuery.stop()
+        latencyQuery.stop()
+    }
 }

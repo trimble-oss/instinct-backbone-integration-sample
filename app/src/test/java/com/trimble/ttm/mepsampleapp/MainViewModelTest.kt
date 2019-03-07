@@ -15,21 +15,18 @@ import com.trimble.ttm.mepsampleapp.view.IgnitionState
 import com.trimble.ttm.mepsampleapp.view.Trip
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
-import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
-import java.util.concurrent.TimeUnit.MINUTES
-import java.util.concurrent.TimeUnit.SECONDS
 
 class MainViewModelIgnitionTest {
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    private val backboneResultSubject = PublishSubject.create<BackboneResult>()
+    private lateinit var callback: (BackboneResult) -> Unit
 
     @RelaxedMockK
     private lateinit var observer: Observer<IgnitionState>
@@ -39,10 +36,13 @@ class MainViewModelIgnitionTest {
         MockKAnnotations.init(this)
 
         mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
-        val backbone = mockk<RxBackbone>(relaxed = true) {
-            every { monitorFetch(listOf(IGNITION_KEY, ENGINE_ON_KEY)) } returns backboneResultSubject
+        val backbone = mockk<CallbackBackbone>(relaxed = true) {
+            every { monitorFetch(listOf(IGNITION_KEY, ENGINE_ON_KEY), captureLambda()) } answers {
+                callback = lambda<(BackboneResult) -> Unit>().captured
+                mockk(relaxed = true)
+            }
         }
-        every { BackboneFactory.rxBackbone(any()) } returns backbone
+        every { BackboneFactory.callbackBackbone(any()) } returns backbone
 
         MainViewModel(mockk(relaxed = true)).ignition.observeForever(observer)
     }
@@ -54,14 +54,14 @@ class MainViewModelIgnitionTest {
 
     @Test
     fun `ignition should emit engine on when backbone says it is`() {
-        backboneResultSubject.onNext(mapOf(ENGINE_ON_KEY to status(true)))
+        callback(mapOf(ENGINE_ON_KEY to status(true)))
 
         verify { observer.onChanged(IgnitionState.ENGINE_ON) }
     }
 
     @Test
     fun `ignition should emit accessory when backbone says engine off and ignition on`() {
-        backboneResultSubject.onNext(
+        callback(
             mapOf(
                 ENGINE_ON_KEY to status(false),
                 IGNITION_KEY to status(true)
@@ -73,7 +73,7 @@ class MainViewModelIgnitionTest {
 
     @Test
     fun `ignition should emit off when backbone says engine off and ignition off`() {
-        backboneResultSubject.onNext(
+        callback(
             mapOf(
                 ENGINE_ON_KEY to status(false),
                 IGNITION_KEY to status(false)
@@ -85,7 +85,7 @@ class MainViewModelIgnitionTest {
 
     @Test
     fun `ignition should emit off when backbone is missing engine and ignition status`() {
-        backboneResultSubject.onNext(mapOf())
+        callback(mapOf())
 
         verify { observer.onChanged(IgnitionState.OFF) }
     }
@@ -102,17 +102,20 @@ class MainViewModelSpeedTest {
     @RelaxedMockK
     private lateinit var observer: Observer<Float>
 
-    private val backboneDataSubject = PublishSubject.create<BackboneData>()
+    private lateinit var callback: (BackboneData) -> Unit
 
     @Before
     fun before() {
         MockKAnnotations.init(this)
 
         mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
-        val backbone = mockk<RxBackbone>(relaxed = true) {
-            every { periodicFetch(2, SECONDS, ENGINE_SPEED_KMH_KEY) } returns backboneDataSubject
+        val backbone = mockk<CallbackBackbone>(relaxed = true) {
+            every { periodicFetch(2 * 1000, ENGINE_SPEED_KMH_KEY, captureLambda()) } answers {
+                callback = lambda<(BackboneData) -> Unit>().captured
+                mockk(relaxed = true)
+            }
         }
-        every { BackboneFactory.rxBackbone(any()) } returns backbone
+        every { BackboneFactory.callbackBackbone(any()) } returns backbone
 
         MainViewModel(mockk(relaxed = true)).speed.observeForever(observer)
     }
@@ -124,7 +127,7 @@ class MainViewModelSpeedTest {
 
     @Test
     fun `speed should emit backbone speed reading`() {
-        backboneDataSubject.onNext(speed(110.2))
+        callback(speed(110.2))
 
         verify { observer.onChanged(110.2f) }
     }
@@ -141,23 +144,26 @@ class MainViewModelTripTest {
     @RelaxedMockK
     private lateinit var observer: Observer<Trip>
 
-    private val backboneResultSubject = PublishSubject.create<BackboneResult>()
+    private lateinit var callback: (BackboneResult) -> Unit
 
     @Before
     fun before() {
         MockKAnnotations.init(this)
 
         mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
-        val backbone = mockk<RxBackbone>(relaxed = true) {
+        val backbone = mockk<CallbackBackbone>(relaxed = true) {
             every {
                 periodicFetch(
-                    1,
-                    MINUTES,
-                    listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY)
+                    1 * 60 * 1000,
+                    listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY),
+                    captureLambda()
                 )
-            } returns backboneResultSubject
+            } answers {
+                callback = lambda<(BackboneResult) -> Unit>().captured
+                mockk(relaxed = true)
+            }
         }
-        every { BackboneFactory.rxBackbone(any()) } returns backbone
+        every { BackboneFactory.callbackBackbone(any()) } returns backbone
 
         MainViewModel(mockk(relaxed = true)).trip.observeForever(observer)
     }
@@ -169,7 +175,7 @@ class MainViewModelTripTest {
 
     @Test
     fun `trip should emit Trip based on odometer and time engine on`() {
-        backboneResultSubject.onNext(
+        callback(
             mapOf(
                 ENGINE_ODOMETER_KM_KEY to odometer(4242.42),
                 TIME_ENGINE_ON_SECONDS_KEY to timeEngineOn(2)
@@ -194,7 +200,7 @@ class MainViewModelLatencyTest {
     @RelaxedMockK
     private lateinit var observer: Observer<BoxData>
 
-    private val backboneDataSubject = PublishSubject.create<BackboneData>()
+    private lateinit var callback: (BackboneData) -> Unit
 
     @Before
     fun before() {
@@ -204,10 +210,13 @@ class MainViewModelLatencyTest {
             "com.trimble.ttm.backbone.api.BackboneFactory",
             "android.os.SystemClock"
         )
-        val backbone = mockk<RxBackbone>(relaxed = true) {
-            every { monitorFetch(GPS_DEGREES_KEY) } returns backboneDataSubject
+        val backbone = mockk<CallbackBackbone>(relaxed = true) {
+            every { monitorFetch(GPS_DEGREES_KEY, captureLambda()) } answers{
+                callback = lambda<(BackboneData)->Unit>().captured
+                mockk(relaxed = true)
+            }
         }
-        every { BackboneFactory.rxBackbone(any()) } returns backbone
+        every { BackboneFactory.callbackBackbone(any()) } returns backbone
         every { SystemClock.uptimeMillis() } returns 0
     }
 
@@ -217,19 +226,12 @@ class MainViewModelLatencyTest {
     }
 
     @Test
-    fun `should emit BoxData when latency observed`() {
-        MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
-
-        verify(exactly = 1) { observer.onChanged(any()) }
-    }
-
-    @Test
     fun `should emit BoxData when data emitted`() {
         MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
 
-        backboneDataSubject.onNext(BackboneData("", Date()))
+        callback(BackboneData("", Date()))
 
-        verify(exactly = 2) { observer.onChanged(any()) }
+        verify(exactly = 1) { observer.onChanged(any()) }
     }
 
 }
