@@ -1,7 +1,6 @@
 package com.trimble.ttm.mepsampleapp
 
 import android.app.Application
-import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -40,14 +39,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
 
-    private val speedQuery = backbone.periodicFetch(2 * 1000, ENGINE_SPEED_KMH_KEY) { result ->
+    private val speedQuery = backbone.periodicFetch(periodInMillis = 2 * 1000, key = ENGINE_SPEED_KMH_KEY) { result ->
         _speed.postValue(result.valueAs())
     }
 
     private val tripQuery = TripUpdater().let { updateTrip ->
         backbone.periodicFetch(
-            1 * 60 * 1000,
-            listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY)
+            periodInMillis = 60 * 1000,
+            keys = listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY)
         ) { result ->
             updateTrip.with(result)?.let { _trip.postValue(it) }
         }

@@ -1,6 +1,5 @@
 package com.trimble.ttm.mepsampleapp
 
-import android.os.SystemClock
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.trimble.ttm.backbone.api.*
@@ -206,10 +205,7 @@ class MainViewModelLatencyTest {
     fun before() {
         MockKAnnotations.init(this)
 
-        mockkStatic(
-            "com.trimble.ttm.backbone.api.BackboneFactory",
-            "android.os.SystemClock"
-        )
+        mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
         val backbone = mockk<CallbackBackbone>(relaxed = true) {
             every { monitorFetch(GPS_DEGREES_KEY, captureLambda()) } answers {
                 callback = lambda<(BackboneData) -> Unit>().captured
@@ -217,7 +213,6 @@ class MainViewModelLatencyTest {
             }
         }
         every { BackboneFactory.callbackBackbone(any()) } returns backbone
-        every { SystemClock.uptimeMillis() } returns 0
     }
 
     @After
