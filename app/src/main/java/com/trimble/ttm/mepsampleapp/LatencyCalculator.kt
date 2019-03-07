@@ -3,7 +3,7 @@ package com.trimble.ttm.mepsampleapp
 import com.trimble.ttm.mepsampleapp.view.BoxData
 
 
-class Latency(private val maxWindowSize: Int) {
+class LatencyCalculator(private val maxWindowSize: Int) {
     private val window = mutableListOf<Long>()
 
     val data: BoxData

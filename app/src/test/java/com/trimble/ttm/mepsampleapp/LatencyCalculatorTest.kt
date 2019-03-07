@@ -5,15 +5,15 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 
-class LatencyTest {
+class LatencyCalculatorTest {
     @Test
     fun `should return zeroed BoxData when messageReceived has never been called`() {
-        assertEquals(BoxData(0f, 0f, 0f, 0f, 0f), Latency(1).data)
+        assertEquals(BoxData(0f, 0f, 0f, 0f, 0f), LatencyCalculator(1).data)
     }
 
     @Test
     fun `should return zeroed BoxData when messageReceived has only been called once`() {
-        val latency = Latency(8).apply {
+        val latency = LatencyCalculator(8).apply {
             add(1000L)
         }
         assertEquals(BoxData(0f, 0f, 0f, 0f, 0f), latency.data)
@@ -21,7 +21,7 @@ class LatencyTest {
 
     @Test
     fun `should calculate BoxData for added times`() {
-        val latency = Latency(8).apply {
+        val latency = LatencyCalculator(8).apply {
             add(1000L)
             add(1111L)
             add(2000L)
@@ -37,7 +37,7 @@ class LatencyTest {
 
     @Test
     fun `should calculate BoxData for times in window`() {
-        val latency = Latency(8).apply {
+        val latency = LatencyCalculator(8).apply {
             add(100L)
             add(200L)
             add(300L)

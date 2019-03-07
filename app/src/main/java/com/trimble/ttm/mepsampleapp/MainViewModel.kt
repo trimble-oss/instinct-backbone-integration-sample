@@ -53,7 +53,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private val latencyQuery = Latency(1000).let { latencyCalculator ->
+    private val latencyQuery = LatencyCalculator(1000).let { latencyCalculator ->
         backbone.monitorFetch(GPS_DEGREES_KEY) {
             latencyCalculator.add(SystemClock.uptimeMillis())
             _latency.postValue(latencyCalculator.data)
