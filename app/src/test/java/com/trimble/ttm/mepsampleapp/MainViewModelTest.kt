@@ -211,8 +211,8 @@ class MainViewModelLatencyTest {
             "android.os.SystemClock"
         )
         val backbone = mockk<CallbackBackbone>(relaxed = true) {
-            every { monitorFetch(GPS_DEGREES_KEY, captureLambda()) } answers{
-                callback = lambda<(BackboneData)->Unit>().captured
+            every { monitorFetch(GPS_DEGREES_KEY, captureLambda()) } answers {
+                callback = lambda<(BackboneData) -> Unit>().captured
                 mockk(relaxed = true)
             }
         }
@@ -226,12 +226,14 @@ class MainViewModelLatencyTest {
     }
 
     @Test
-    fun `should emit BoxData when data emitted`() {
+    fun `should emit BoxData with receivedTime minus sentTime`() {
         MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
 
-        callback(BackboneData("", Date()))
+        callback(latency(Date(1000000), Date(1001000)))
 
-        verify(exactly = 1) { observer.onChanged(any()) }
+        verify(exactly = 1) { observer.onChanged(BoxData(1f, 1f, 1f, 1f, 1f)) }
     }
 
+    private fun latency(sentTime: Date, receivedTime: Date) =
+        BackboneData("{$DATA_KEY:0, $MESSAGE_SENT_TIME_KEY: ${sentTime.time / 1000}}", receivedTime)
 }

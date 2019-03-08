@@ -4,13 +4,12 @@ import com.trimble.ttm.mepsampleapp.view.BoxData
 
 
 class LatencyCalculator(private val maxWindowSize: Int) {
-    private val window = mutableListOf<Long>()
+    private val window = mutableListOf<Float>()
 
     val data: BoxData
         get() =
-            if (window.size < 2) BoxData(0f, 0f, 0f, 0f, 0f)
+            if (window.isEmpty()) BoxData(0f, 0f, 0f, 0f, 0f)
             else window
-                .zipWithNext { a, b -> (b - a) / 1000f }
                 .sorted()
                 .run {
                     BoxData(
@@ -22,8 +21,8 @@ class LatencyCalculator(private val maxWindowSize: Int) {
                     )
                 }
 
-    fun add(time: Long) {
-        window.add(time)
+    fun add(seconds: Float) {
+        window.add(seconds)
         if (window.size > maxWindowSize) window.removeAt(0)
     }
 
