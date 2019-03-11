@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-This project will not be able to build until you setup access to the Trimble Artifactory Repo.
+You will not be able to build this project until you set up access to the Trimble Artifactory Repo.
 
 Please follow the [Backbone Setup Guide](doc/BackboneGettingStarted.md).
 
@@ -55,7 +55,7 @@ Backbone is a separate app running in a different process so fetching data uses 
 Under the hood Android is using [IPC Binders](https://events.static.linuxfound.org/images/stories/slides/abs2013_gargentas.pdf)
 which require handshake and setup steps before each fetch. 
 
-To keep your Android device performing properly use [monitorFetch](doc/CallbackBackbone.md), when fetching infrequently changing [BackboneKeys](doc/BackboneDataTypes.md)
+To keep your Android device performing properly use [monitorFetch](doc/CallbackBackbone.md) when fetching infrequently changing [BackboneKeys](doc/BackboneDataTypes.md).
 
 #### Trip
 
