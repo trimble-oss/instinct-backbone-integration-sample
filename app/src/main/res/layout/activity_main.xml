@@ -1,61 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:orientation="vertical"
+                                                   android:background="@color/colorBackground"
+                                                   tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="fill_horizontal"
-        android:text="@string/latitude"
-        android:textSize="26sp" />
+    <com.trimble.ttm.mepsampleapp.view.BoxChart
+            android:id="@+id/latency_chart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/container"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="8dp"
+            app:textColor="@color/colorText"
+            app:boxColor="@color/colorAccent"
+            app:whiskerColor="@color/colorAccent"
+            app:medianColor="@android:color/white"
+            app:medianWidth="4"/>
 
-    <TextView
-        android:id="@+id/latitude_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/double_default"
-        android:textStyle="bold"/>
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="wrap_content"
+                                                       android:layout_height="wrap_content"
+                                                       android:id="@+id/container"
+                                                       app:layout_constraintEnd_toEndOf="parent"
+                                                       app:layout_constraintTop_toTopOf="parent"
+                                                       app:layout_constraintBottom_toBottomOf="parent"
+                                                       android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/ignition_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Ignition"
+                app:layout_constraintBottom_toTopOf="@+id/ignition"
+                app:layout_constraintStart_toStartOf="@id/ignition"
+                app:layout_constraintEnd_toEndOf="@id/ignition"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="fill_horizontal"
-        android:text="@string/longitude"
-        android:textSize="26sp" />
+        <com.trimble.ttm.mepsampleapp.view.IgnitionView
+                android:id="@+id/ignition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/speedometer"
+                app:layout_constraintEnd_toEndOf="@id/speedometer"
+                app:layout_constraintStart_toStartOf="@+id/speedometer"
+                app:vertical="false"
+                android:layout_marginBottom="32dp"/>
 
-    <TextView
-        android:id="@+id/longitude_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/double_default"
-        android:textStyle="bold"/>
+        <TextView
+                android:id="@+id/trip_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trip"
+                android:textColor="@color/colorText"
+                app:layout_constraintBottom_toTopOf="@+id/trip"
+                app:layout_constraintEnd_toEndOf="@+id/trip"
+                app:layout_constraintStart_toStartOf="@+id/trip"/>
 
-    <Button
-        android:id="@+id/get_gps_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/read_gps"
-        android:gravity="center" />
+        <com.github.anastr.speedviewlib.AwesomeSpeedometer
+                android:id="@+id/speedometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:sv_withTremble="false"/>
 
-</LinearLayout>
+        <com.trimble.ttm.mepsampleapp.view.TripView
+                android:id="@+id/trip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/ignition"
+                app:layout_constraintEnd_toEndOf="@+id/ignition"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/ignition_label"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

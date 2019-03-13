@@ -1,37 +1,34 @@
 package com.trimble.ttm.mepsampleapp
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.trimble.ttm.backbone.api.BackboneFactory
-import com.trimble.ttm.backbone.api.GpsData
-import com.trimble.ttm.mepsampleapp.viewmodels.MainActivityViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var _latitudeView: TextView
-    private lateinit var _longitudeView: TextView
+    private val model by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        _latitudeView = findViewById(R.id.latitude_value)
-        _longitudeView = findViewById(R.id.longitude_value)
+        model.ignition.observe(this, Observer {
+            ignition.set(it)
+        })
 
-        val backbone = BackboneFactory.backbone(applicationContext)
-        val model = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+        model.speed.observe(this, Observer {
+            speedometer.speedTo(it)
+        })
 
-        findViewById<Button>(R.id.get_gps_data).setOnClickListener {
-            val gpsData = model.getGpsLocation(backbone)
-            populateGpsData(gpsData)
-        }
-    }
+        model.trip.observe(this, Observer {
+            trip.set(it)
+        })
 
-    private fun populateGpsData(gpsData: GpsData) {
-        _latitudeView.text = gpsData.latitudeInDegrees.toString()
-        _longitudeView.text = gpsData.longitudeInDegrees.toString()
+        model.latency.observe(this, Observer {
+            latency_chart.set(it)
+        })
     }
 }
