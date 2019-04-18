@@ -1,0 +1,11 @@
+<!--
+  ~ © 2019 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
+  -->
+
+<resources>
+    <string name="app_name">ttm-mep-sample-app</string>
+    <string name="latitude">Latitude</string>
+    <string name="read_gps">Read GPS</string>
+    <string name="double_default">0.0</string>
+    <string name="longitude">Longitude</string>
+</resources>
