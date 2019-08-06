@@ -10,148 +10,177 @@ Please follow the [Backbone Setup Guide](../BackboneGettingStarted.md).
 
 ## Overview
 
-This sample app demonstrates how to use a few of the most important methods of the Backbone API.
+This sample app uses [Backbone](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/) to retrieve and monitor data stored on the Backbone App.
 
-The ViewModel uses [Callback Backbone](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/) to fetch data from Backbone.
-### View Elements
+In order to effectively use [Backbone](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/) The most important things to learn are:
+* What is a [Backbone.Retriever](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-retriever/)
+* Difference between [SingleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-single-entry-query/) and [MultipleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/)
+* When to monitor data for changes and when to fetch data periodically
 
-#### Ignition
+## What is a Backbone.Retriever
 
-On the right are three lights representing the state of the ignition:
-* Green = Engine On
-* Yellow = Accessory
-* Red = Ignition Off
+Data in the Backbone app is stored as JSON and identified by a unique key. 
 
-The sample app code to monitor Ignition is:
+[Backbone.Retrievers](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-retriever/) contain the unique key and a method to map the JSON into a pre-defined data object.
+
+In other words when you ask backbone to retrieve [GpsDegrees](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-gps-degrees/-companion/) 
+the returned [Backbone.Entry](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-entry/) 
+contains [GpsDegrees](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-gps-degrees/) as data not JSON.
 ```kotlin
-private val ignitionQuery = backbone.monitorFetch(listOf(IGNITION_KEY, ENGINE_ON_KEY)) { result ->
-    _ignition.postValue(
-        when {
-            result[ENGINE_ON_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ENGINE_ON
-            result[IGNITION_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ACCESSORY
-            else -> IgnitionState.OFF
+val gps: Backbone.Entry<GpsDegrees>? = backbone.retrieveDataFor(GpsDegrees).fetch()
+```
+
+List of all [defined Backbone.Retrievers](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/)
+
+**Note:** *All the [defined Backbone.Retrievers](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/) are [Companion Objects](https://kotlinlang.org/docs/tutorials/kotlin-for-py/objects-and-companion-objects.html#companion-objects) of the given data type. That's how [GpsDegrees](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-gps-degrees/) is a data class and a [Backbone.Retriever](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-retriever/).*
+
+## Difference between SingleKeyQuery and MultipleKeyQuery
+
+The logic for updating speedometer, in the center of the screen:
+```kotlin
+backbone
+    .retrieveDataFor(EngineSpeedKmh)
+    .every(2, SECONDS)
+    .handle { (speed, _) -> _speed.postValue(speed.value.toFloat()) }
+```
+
+The logic for updating trip (how far/long current trip is), at the top of the screen:
+```kotlin
+backbone
+    .retrieveDataFor(EngineOdometerKm, TimeEngineOn)
+    .every(1, MINUTES)
+    .handle { result ->
+        result[TimeEngineOn]?.let { (engineOn, _) ->
+            _trip.postValue(
+                updateTrip.with(
+                    odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0,
+                    timeEngineOn = engineOn.value
+                )
+            )
         }
-    )
-}
-```
-There are few things to note in the above code:
-* both [IGNITION_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) and [ENGINE_ON_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) are being fetched
-* [monitorFetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/) is used
-
-**Why Both Keys**
-
-Since it is possible for ignition and engine state to come from two different sources they are stored as separate keys in Backbone.
-In the above code, if either the [IGNITION_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) or [ENGINE_ON_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) change
-then the callback is executed with a new [BackboneResult](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-result.html).
-The [BackboneResult](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-result.html) contains the state of both keys, allowing the IgnitionState to be determined with concise `when` statement.
-
-**Why Monitor Fetch**
-
-It would be possible to get the same behaviour by using [periodicFetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/) instead of [monitorFetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/)
-but we don't because it would degrade the performance of the device.
-
-Backbone is a separate app running in a different process so fetching data uses Inter-Process Communication (IPC) which is a little expensive.
-Under the hood Android is using [IPC Binders](https://events.static.linuxfound.org/images/stories/slides/abs2013_gargentas.pdf)
-which require handshake and setup steps before each fetch.
-
-To keep your Android device performing properly use [monitorFetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/) when fetching infrequently changing [BackboneKeys](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/).
-
-#### Trip
-
-At the top of the screen are two numbers representing the distance and amount of time since the engine was started.
-
-The sample app code to publish Trip is:
-```kotlin
-private val tripQuery = TripUpdater().let { updateTrip ->
-    backbone.periodicFetch(
-        periodInMillis = 60 * 1000,
-        keys = listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY)
-    ) { result ->
-        updateTrip.with(result)?.let { _trip.postValue(it) }
     }
-}
-```
-There are few things to note in the above code:
-* both [ENGINE_ODOMETER_KM_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) and [TIME_ENGINE_ON_SECONDS_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) are being fetched.
-* [periodicFetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone) is used with a period of 60s
-
-**Why Both Keys**
-
-The TripUpdater determines the current distance and time of a trip by comparing
-new [ENGINE_ODOMETER_KM_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) and [TIME_ENGINE_ON_SECONDS_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) values
-to previous values. When the engine_on_time decreases then a trip is restarted and the starting odometer reading is saved,
-otherwise `distance = currentOdometer - startOdometer`.
-The time of the trip is always the amount of time the engine has been on.
-
-By having a single [BackboneResult](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-result.html) with both [ENGINE_ODOMETER_KM_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) and [TIME_ENGINE_ON_SECONDS_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/)
-it makes it easier to keep the two values in sync.
-
-**Why Periodic Fetch**
-
-The [TIME_ENGINE_ON_SECONDS_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) is updated about once every second
-and [ENGINE_ODOMETER_KM_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) is usually updated about every 2 seconds.
-If the Trip view used a [monitorFetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/) then it would be receiving results every second.
-Vehicles can't travel very far in a second so most of the results wouldn't actually change the view.
-
-By fetching Trip data every minute, each result is meaningful and the system is put under less stress.
-
-#### Speedometer
-
-In the center of the screen is a speedometer displaying the current speed of the vehicle.
-
-The sample app code to fetch the speed is:
-```kotlin
-private val speedQuery = backbone.periodicFetch(periodInMillis = 2 * 1000, key = ENGINE_SPEED_KMH_KEY) { result ->
-    _speed.postValue(result.valueAs<Float>())
-}
 ```
 
-There are a few things to note in the above code:
-* in the callback the result is a [BackboneData](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/) instead of a [BackboneResult](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-result.html)
-* the value is a Float instead of a Double like [ENGINE_SPEED_KMH_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) is supposed to be.
+To calculate the duration of the current trip both [EngineOdometerKm](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-odometer-km/) and [TimeEngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-time-engine-on) are needed.
+Unlike speed which uses a [SingleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-single-entry-query/), trip uses a [MultipleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/).
 
-**Why Backbone Data**
+With a [SingleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-single-entry-query/) a [Backbone.Entry](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-entry/) is returned directly 
+but for a [MultipleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/) a [MultipleEntryQuery.Result](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/-result) is returned.
+A [MultipleEntryQuery.Result](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/-result) contains a [Backbone.Entry](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-entry/) for each queried [Backbone.Retriever](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-retriever/).
 
-Since only the [ENGINE_SPEED_KMH_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) is being fetched there is no possibility of multiple result values.
-The single key version of [periodicFetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/) returns [BackboneData](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/)
-instead of a [BackboneResult](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-result.html) so indexing the value using a [BackboneKey](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) isn't necessary.
-
-It should be noted that if you use a single [BackboneKey](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) in a list like:
-`backbone.periodicFetch(periodInMillis = 2 * 1000, keys = listOf(ENGINE_SPEED_KMH_KEY))`
-then the callback **WILL** receive a [BackboneResult](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-result.html) **NOT** a [BackboneData](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/).
-
-**Why a Float**
-
-Internally every [BackboneData](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/) stores its value as JSON.
-The [valueAs](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/value-as.html) method uses string interpolation to try and cast the value to the desired class.
-In other words, since [ENGINE_SPEED_KMH_KEY](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) is received as a Double it can be interpolated into any Numeric class.
-
-#### GPS Message Latency
-
-On the left is a box and whisker plot of the interquartile range of the transmission time of each GPS message.
-
-This is the code from the sample app to map Backbone GPS messages to latency:
+Using a [MultipleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/) makes it easier to keep different data sources in sync. 
+It also makes code easier to understand. 
+If we wanted to use only [SingleEntryQueries](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-single-entry-query/) to calculate trip, we would have to do something like the much worse:
 ```kotlin
-private val latencyQuery = LatencyCalculator(maxWindowSize = 1000).let { latencyCalculator ->
-    backbone.monitorFetch(GPS_DEGREES_KEY) { result ->
-        val latencySeconds = (result.receivedTime.time - result.sentTime.time) / 1000f
-        latencyCalculator.add(latencySeconds)
-        _latency.postValue(latencyCalculator.data)
+private var shouldUpdate = false
+private var odometer: Int = 0
+private var timeEngineOn: Long = 0
+
+backbone.retrieveDataFor(EngineOdometerKm)
+    .every(1, MINUTES)
+    .handle {
+        odometer = it.data.value.toInt()
+        if (shouldUpdate) {
+            _trip.postValue(updateTrip.with(odometer, timeEngineOn))
+            shouldUpdate = false
+        } else {
+            shouldUpdate = true
+        }
     }
-}
+
+backbone.retrieveDataFor(TimeEngineOn)
+    .every(1, MINUTES)
+    .handle {
+        timeEngineOn = it.data.value
+        if (shouldUpdate) {
+            _trip.postValue(updateTrip.with(odometer, timeEngineOn))
+            shouldUpdate = false
+        } else {
+            shouldUpdate = true
+        }
+    }
 ```
 
-There are a few things to note in the above code:
-* both the receivedTime and sentTime of [BackboneData](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/) are used
+**Note:** *If Backbone does not have data for a desired [Backbone.Retriever](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-retriever/) then the value in the [MultipleEntryQuery.Result](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/-result) will be null.*
+```kotlin
+val odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0
+```
 
-**Why are times in BackboneData**
+**Note:** *[Backbone.Entry](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-entry/) is a [Data Class](https://kotlinlang.org/docs/reference/data-classes.html#data-classes) so [destructuring declaration](https://kotlinlang.org/docs/reference/data-classes.html#data-classes-and-destructuring-declarations) can be used.*
+```kotlin
+backbone
+    .retrieveDataFor(EngineSpeedKmh)
+    .every(2, SECONDS)
+    .handle { (speed, _) ->  }
+```
+## When to monitor data for changes and when to fetch data periodically
 
-Whenever Backbone receives a value for a [BackboneKey](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-keys/) the Android device's wall clock time
-is saved as the [received time](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/received-time.html).
-Additionally, every message sent from a data source has both a value and the time the message was sent.
+The logic for updating trip, at the top of the screen, retrieves [EngineOdometerKm](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-odometer-km/) and [TimeEngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-time-engine-on) every minute.
+```kotlin
+backbone
+    .retrieveDataFor(EngineOdometerKm, TimeEngineOn)
+    .every(1, MINUTES)
+    .handle { result ->
+        result[TimeEngineOn]?.let { (engineOn, _) ->
+            _trip.postValue(
+                updateTrip.with(
+                    odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0,
+                    timeEngineOn = engineOn.value
+                )
+            )
+        }
+    }
+```
 
-By subtracting the `sentTime` from the `receivedTime`, it's possible to calculate the amount of time the message was in transit.
+The logic for updating Ignition, on the right of the screen, retrieves [Ignition](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-ignition/) and [EngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-on/) whenever one of the values change.
+```kotlin
+backbone
+    .monitorChangesInDataFor(Ignition)
+    .alsoMonitor(EngineOn)
+    .handle { result ->
+        _ignition.postValue(
+            when {
+                result[EngineOn]?.data?.value == true -> IgnitionState.ENGINE_ON
+                result[Ignition]?.data?.value == true -> IgnitionState.ACCESSORY
+                else -> IgnitionState.OFF
+            }
+        )
+    }
+```
 
-It should be noted that the precision for the two times are different.
-* sentTime is Unix Time so is in seconds
-* receivedTime is a Java Date so is in milliseconds
+In most vehicles the [EngineOdometerKm](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-odometer-km/) and [TimeEngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-time-engine-on) are updated every 2 seconds.
+
+If trip was updated every time [EngineOdometerKm](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-odometer-km/) or [TimeEngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-time-engine-on) was changed, 
+there would be many updates, with no UI change, because trip shows travel time in seconds and distance in KM.
+
+The sample app retrieves trip data every minute to limit the amount of expensive Inter-Process Communication (IPC).
+
+On the other hand, [Ignition](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-ignition/) and [EngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-on/) change only at the ends of a driver's trip.
+If the query ran periodically there would be many updates with no UI change. 
+It would also be likely for [Ignition](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-ignition/) or [EngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-on/) to change between period completions, causing the UI update to be delayed.
+
+Instead of periodically forcing a fetch, the sample app asks Backbone to send [Ignition](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-ignition/) and [EngineOn](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api.data/-engine-on/) when one of them changes.
+
+**Note:** *It's possible to create a [MultipleEntryQuery](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-multiple-entry-query/) that retrieves extra [Backbone.Entries](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/-entry/) when monitored data changes.*
+
+```kotlin
+backbone
+    .monitorChangesInDataFor(Ignition)
+    .alsoRetrieve(EngineOdometerKm, EngineSpeedKmh)
+    .handle { result ->
+            val ignition = result[Ignition]
+            val odometer = result[EngineOdometerKm]
+    }
+```
+
+**Note:** *It's possible to create a Query that both monitors data and runs periodically. When a change occurs then the period is reset. The code below fetches Ignition at least once a minute.*
+
+```kotlin
+backbone
+    .monitorChangesInDataFor(Ignition)
+    .every(1, MINUTES)
+    .handle { (ignition, _) ->
+    
+    }
+```
+
