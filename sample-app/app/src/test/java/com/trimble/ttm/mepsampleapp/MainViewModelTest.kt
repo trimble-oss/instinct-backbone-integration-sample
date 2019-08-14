@@ -7,12 +7,7 @@ package com.trimble.ttm.mepsampleapp
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.trimble.ttm.backbone.api.*
-import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_ODOMETER_KM_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_ON_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_SPEED_KMH_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.GPS_DEGREES_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.IGNITION_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.TIME_ENGINE_ON_SECONDS_KEY
+import com.trimble.ttm.backbone.api.data.*
 import com.trimble.ttm.mepsampleapp.view.BoxData
 import com.trimble.ttm.mepsampleapp.view.IgnitionState
 import com.trimble.ttm.mepsampleapp.view.Trip
@@ -29,23 +24,31 @@ class MainViewModelIgnitionTest {
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    private lateinit var callback: (BackboneResult) -> Unit
-
     @RelaxedMockK
     private lateinit var observer: Observer<IgnitionState>
+
+    @RelaxedMockK
+    private lateinit var result: MultipleEntryQuery.Result
+
+    private lateinit var callback: (MultipleEntryQuery.Result) -> Unit
 
     @Before
     fun before() {
         MockKAnnotations.init(this)
 
         mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
-        val backbone = mockk<CallbackBackbone>(relaxed = true) {
-            every { monitorFetch(listOf(IGNITION_KEY, ENGINE_ON_KEY), captureLambda()) } answers {
-                callback = lambda<(BackboneResult) -> Unit>().captured
-                mockk(relaxed = true)
+        val backbone = mockk<Backbone>(relaxed = true) {
+            every { monitorChangesInDataFor(Ignition) } returns mockk {
+                every { alsoMonitor(EngineOn) } returns mockk {
+                    every { handle(captureLambda()) } answers {
+                        callback = lambda<(MultipleEntryQuery.Result) -> Unit>().captured
+                        mockk(relaxed = true)
+                    }
+
+                }
             }
         }
-        every { BackboneFactory.callbackBackbone(any()) } returns backbone
+        every { BackboneFactory.backbone(any()) } returns backbone
 
         MainViewModel(mockk(relaxed = true)).ignition.observeForever(observer)
     }
@@ -57,44 +60,42 @@ class MainViewModelIgnitionTest {
 
     @Test
     fun `ignition should emit engine on when backbone says it is`() {
-        callback(mapOf(ENGINE_ON_KEY to status(true)))
+        every { result[EngineOn] } returns Backbone.Entry(EngineOn(true, Date()), Date())
+
+        callback(result)
 
         verify { observer.onChanged(IgnitionState.ENGINE_ON) }
     }
 
     @Test
     fun `ignition should emit accessory when backbone says engine off and ignition on`() {
-        callback(
-            mapOf(
-                ENGINE_ON_KEY to status(false),
-                IGNITION_KEY to status(true)
-            )
-        )
+        every { result[EngineOn] } returns Backbone.Entry(EngineOn(false, Date()), Date())
+        every { result[Ignition] } returns Backbone.Entry(Ignition(true, Date()), Date())
+
+        callback(result)
 
         verify { observer.onChanged(IgnitionState.ACCESSORY) }
     }
 
     @Test
     fun `ignition should emit off when backbone says engine off and ignition off`() {
-        callback(
-            mapOf(
-                ENGINE_ON_KEY to status(false),
-                IGNITION_KEY to status(false)
-            )
-        )
+        every { result[EngineOn] } returns Backbone.Entry(EngineOn(false, Date()), Date())
+        every { result[Ignition] } returns Backbone.Entry(Ignition(false, Date()), Date())
+
+        callback(result)
 
         verify { observer.onChanged(IgnitionState.OFF) }
     }
 
     @Test
     fun `ignition should emit off when backbone is missing engine and ignition status`() {
-        callback(mapOf())
+        every { result[EngineOn] } returns null
+        every { result[Ignition] } returns null
+
+        callback(result)
 
         verify { observer.onChanged(IgnitionState.OFF) }
     }
-
-    private fun status(reading: Boolean) =
-        BackboneData("{$DATA_KEY:$reading, $MESSAGE_SENT_TIME_KEY: 1234567890}", Date())
 }
 
 class MainViewModelSpeedTest {
@@ -106,20 +107,23 @@ class MainViewModelSpeedTest {
     private lateinit var observer: Observer<Float>
 
     @RelaxedMockK
-    private lateinit var callback: (BackboneData) -> Unit
+    private lateinit var callback: (Backbone.Entry<EngineSpeedKmh>) -> Unit
 
     @Before
     fun before() {
         MockKAnnotations.init(this)
 
         mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
-        val backbone = mockk<CallbackBackbone>(relaxed = true) {
-            every { periodicFetch(2 * 1000, ENGINE_SPEED_KMH_KEY, captureLambda()) } answers {
-                callback = lambda<(BackboneData) -> Unit>().captured
-                mockk(relaxed = true)
+        val backbone = mockk<Backbone>(relaxed = true) {
+            every { retrieveDataFor(EngineSpeedKmh) } returns mockk {
+                every { every(any(), any()) } returns this
+                every { handle(captureLambda()) } answers {
+                    callback = lambda<(Backbone.Entry<EngineSpeedKmh>) -> Unit>().captured
+                    mockk(relaxed = true)
+                }
             }
         }
-        every { BackboneFactory.callbackBackbone(any()) } returns backbone
+        every { BackboneFactory.backbone(any()) } returns backbone
 
         MainViewModel(mockk(relaxed = true)).speed.observeForever(observer)
     }
@@ -131,13 +135,10 @@ class MainViewModelSpeedTest {
 
     @Test
     fun `speed should emit backbone speed reading`() {
-        callback(speed(110.2))
+        callback(Backbone.Entry(EngineSpeedKmh(110.2, Date()), Date()))
 
         verify { observer.onChanged(110.2f) }
     }
-
-    private fun speed(reading: Double) =
-        BackboneData("{$DATA_KEY:$reading, $MESSAGE_SENT_TIME_KEY: 1234567890}", Date())
 }
 
 class MainViewModelTripTest {
@@ -148,26 +149,25 @@ class MainViewModelTripTest {
     @RelaxedMockK
     private lateinit var observer: Observer<Trip>
 
-    private lateinit var callback: (BackboneResult) -> Unit
+    @RelaxedMockK
+    private lateinit var result: MultipleEntryQuery.Result
+
+    private val callback = slot<(MultipleEntryQuery.Result) -> Unit>()
 
     @Before
     fun before() {
         MockKAnnotations.init(this)
 
         mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
-        val backbone = mockk<CallbackBackbone>(relaxed = true) {
-            every {
-                periodicFetch(
-                    1 * 60 * 1000,
-                    listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY),
-                    captureLambda()
-                )
-            } answers {
-                callback = lambda<(BackboneResult) -> Unit>().captured
-                mockk(relaxed = true)
+        val backbone = mockk<Backbone>(relaxed = true) {
+            every { retrieveDataFor(EngineOdometerKm) } returns mockk {
+                every { alsoRetrieve(TimeEngineOn) } returns mockk {
+                    every { every(any(), any()) } returns this
+                    every { handle(capture(callback)) } returns mockk()
+                }
             }
         }
-        every { BackboneFactory.callbackBackbone(any()) } returns backbone
+        every { BackboneFactory.backbone(any()) } returns backbone
 
         MainViewModel(mockk(relaxed = true)).trip.observeForever(observer)
     }
@@ -179,21 +179,14 @@ class MainViewModelTripTest {
 
     @Test
     fun `trip should emit Trip based on odometer and time engine on`() {
-        callback(
-            mapOf(
-                ENGINE_ODOMETER_KM_KEY to odometer(4242.42),
-                TIME_ENGINE_ON_SECONDS_KEY to timeEngineOn(2)
-            )
-        )
+        every { result[EngineOdometerKm] } returns Backbone.Entry(EngineOdometerKm(4242.42, Date()), Date())
+
+        every { result[TimeEngineOn] } returns Backbone.Entry(TimeEngineOn(2, Date()), Date())
+
+        callback.captured(result)
 
         verify { observer.onChanged(Trip(2, 0)) }
     }
-
-    private fun odometer(reading: Double) =
-        BackboneData("{$DATA_KEY:$reading, $MESSAGE_SENT_TIME_KEY: 1234567890}", Date())
-
-    private fun timeEngineOn(reading: Long) =
-        BackboneData("{$DATA_KEY:$reading, $MESSAGE_SENT_TIME_KEY: 1234567890}", Date())
 }
 
 class MainViewModelLatencyTest {
@@ -204,20 +197,19 @@ class MainViewModelLatencyTest {
     @RelaxedMockK
     private lateinit var observer: Observer<BoxData>
 
-    private lateinit var callback: (BackboneData) -> Unit
+    private val callback = slot<(Backbone.Entry<GpsDegrees>) -> Unit>()
 
     @Before
     fun before() {
         MockKAnnotations.init(this)
 
         mockkStatic("com.trimble.ttm.backbone.api.BackboneFactory")
-        val backbone = mockk<CallbackBackbone>(relaxed = true) {
-            every { monitorFetch(GPS_DEGREES_KEY, captureLambda()) } answers {
-                callback = lambda<(BackboneData) -> Unit>().captured
-                mockk(relaxed = true)
+        val backbone = mockk<Backbone>(relaxed = true) {
+            every { monitorChangesInDataFor(GpsDegrees) } returns mockk {
+                every { handle(capture(callback)) } returns mockk()
             }
         }
-        every { BackboneFactory.callbackBackbone(any()) } returns backbone
+        every { BackboneFactory.backbone(any()) } returns backbone
     }
 
     @After
@@ -229,11 +221,8 @@ class MainViewModelLatencyTest {
     fun `should emit BoxData with receivedTime minus sentTime`() {
         MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
 
-        callback(latency(Date(1000000), Date(1001000)))
+        callback.captured(Backbone.Entry(GpsDegrees(0.0, 0.0, 0.0, Date(), Date(1000000)), Date(1001000)))
 
         verify(exactly = 1) { observer.onChanged(BoxData(1f, 1f, 1f, 1f, 1f)) }
     }
-
-    private fun latency(sentTime: Date, receivedTime: Date) =
-        BackboneData("{$DATA_KEY:0, $MESSAGE_SENT_TIME_KEY: ${sentTime.time / 1000}}", receivedTime)
 }

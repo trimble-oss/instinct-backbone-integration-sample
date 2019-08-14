@@ -9,20 +9,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.trimble.ttm.backbone.api.BackboneFactory
-import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_ODOMETER_KM_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_ON_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.ENGINE_SPEED_KMH_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.GPS_DEGREES_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.IGNITION_KEY
-import com.trimble.ttm.backbone.api.BackboneKeys.TIME_ENGINE_ON_SECONDS_KEY
+import com.trimble.ttm.backbone.api.data.*
 import com.trimble.ttm.mepsampleapp.view.BoxData
 import com.trimble.ttm.mepsampleapp.view.IgnitionState
 import com.trimble.ttm.mepsampleapp.view.Trip
-import io.reactivex.Observable
+import java.util.concurrent.TimeUnit.MINUTES
+import java.util.concurrent.TimeUnit.SECONDS
 
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
-    private val backbone = BackboneFactory.callbackBackbone(getApplication())
+    private val backbone = BackboneFactory.backbone(getApplication())
 
     private val _ignition = MutableLiveData<IgnitionState>()
     private val _speed = MutableLiveData<Float>()
@@ -34,43 +30,57 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val trip: LiveData<Trip> = _trip
     val latency: LiveData<BoxData> = _latency
 
-    private val ignitionQuery = backbone.monitorFetch(listOf(IGNITION_KEY, ENGINE_ON_KEY)) { result ->
-        _ignition.postValue(
-            when {
-                result[ENGINE_ON_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ENGINE_ON
-                result[IGNITION_KEY]?.valueAs<Boolean>() == true -> IgnitionState.ACCESSORY
-                else -> IgnitionState.OFF
+    private val ignitionStoppable = backbone
+        .monitorChangesInDataFor(Ignition)
+        .alsoMonitor(EngineOn)
+        .handle { result ->
+            _ignition.postValue(
+                when {
+                    result[EngineOn]?.data?.value == true -> IgnitionState.ENGINE_ON
+                    result[Ignition]?.data?.value == true -> IgnitionState.ACCESSORY
+                    else -> IgnitionState.OFF
+                }
+            )
+        }
+
+    private val speedStoppable = backbone
+        .retrieveDataFor(EngineSpeedKmh)
+        .every(2, SECONDS)
+        .handle { (speed, _) -> _speed.postValue(speed.value.toFloat()) }
+
+    private val tripStoppable = TripUpdater().let { updateTrip ->
+        backbone
+            .retrieveDataFor(EngineOdometerKm)
+            .alsoRetrieve(TimeEngineOn)
+            .every(1, MINUTES)
+            .handle { result ->
+                result[TimeEngineOn]?.let { (engineOn, _) ->
+                    _trip.postValue(
+                        updateTrip.with(
+                            odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0,
+                            timeEngineOn = engineOn.value
+                        )
+                    )
+                }
             }
-        )
     }
 
-    private val speedQuery = backbone.periodicFetch(periodInMillis = 2 * 1000, key = ENGINE_SPEED_KMH_KEY) { result ->
-        _speed.postValue(result.valueAs())
-    }
-
-    private val tripQuery = TripUpdater().let { updateTrip ->
-        backbone.periodicFetch(
-            periodInMillis = 60 * 1000,
-            keys = listOf(ENGINE_ODOMETER_KM_KEY, TIME_ENGINE_ON_SECONDS_KEY)
-        ) { result ->
-            updateTrip.with(result)?.let { _trip.postValue(it) }
-        }
-    }
-
-    private val latencyQuery = LatencyCalculator(maxWindowSize = 1000).let { latencyCalculator ->
-        backbone.monitorFetch(GPS_DEGREES_KEY) { result ->
-            val latencySeconds = (result.receivedTime.time - result.sentTime.time) / 1000f
-            latencyCalculator.add(latencySeconds)
-            _latency.postValue(latencyCalculator.data)
-        }
+    private val latencyStoppable = LatencyCalculator(maxWindowSize = 1000).let { latencyCalculator ->
+        backbone
+            .monitorChangesInDataFor(GpsDegrees)
+            .handle { (gps, receivedTime) ->
+                val latencySeconds = (receivedTime.time - gps.sentTime.time) / 1000f
+                latencyCalculator.add(latencySeconds)
+                _latency.postValue(latencyCalculator.data)
+            }
     }
 
     override fun onCleared() {
         super.onCleared()
 
-        ignitionQuery.stop()
-        speedQuery.stop()
-        tripQuery.stop()
-        latencyQuery.stop()
+        ignitionStoppable.stop()
+        speedStoppable.stop()
+        tripStoppable.stop()
+        latencyStoppable.stop()
     }
 }
