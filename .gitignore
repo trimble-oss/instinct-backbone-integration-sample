@@ -13,3 +13,6 @@ sample-app/.idea/*
 !sample-app/.idea/scopes/
 sample-app/.idea/scopes/*
 !sample-app/.idea/scopes/Trimble_Sources.xml
+
+!sample-app/.idea/codeStyles
+!sample-app/.idea/saveactions_settings.xml
