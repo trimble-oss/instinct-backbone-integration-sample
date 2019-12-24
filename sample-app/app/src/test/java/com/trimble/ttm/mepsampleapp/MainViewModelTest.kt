@@ -179,7 +179,10 @@ class MainViewModelTripTest {
 
     @Test
     fun `trip should emit Trip based on odometer and time engine on`() {
-        every { result[EngineOdometerKm] } returns Backbone.Entry(EngineOdometerKm(4242.42, Date()), Date())
+        every { result[EngineOdometerKm] } returns Backbone.Entry(
+            EngineOdometerKm(4242.42, Date()),
+            Date()
+        )
 
         every { result[TimeEngineOn] } returns Backbone.Entry(TimeEngineOn(2, Date()), Date())
 
@@ -221,7 +224,12 @@ class MainViewModelLatencyTest {
     fun `should emit BoxData with receivedTime minus sentTime`() {
         MainViewModel(mockk(relaxed = true)).latency.observeForever(observer)
 
-        callback.captured(Backbone.Entry(GpsDegrees(0.0, 0.0, 0.0, Date(), Date(1000000)), Date(1001000)))
+        callback.captured(
+            Backbone.Entry(
+                GpsDegrees(0.0, 0.0, 0.0, Date(), Date(1000000)),
+                Date(1001000)
+            )
+        )
 
         verify(exactly = 1) { observer.onChanged(BoxData(1f, 1f, 1f, 1f, 1f)) }
     }
