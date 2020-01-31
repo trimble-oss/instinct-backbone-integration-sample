@@ -23,7 +23,7 @@ You will also need to install other platform applications onto your device for t
 
 ## Tablet Setup
 
-Once you have installed the platform applications, you will need to follow some steps to set up your tablet to work with the Backbone.
+Follow [Tablet Setup Instructions](https://confluence.trimble.tools/pages/viewpage.action?spaceKey=MAINE&title=Android+Developers%3A+Get+Started+with+Instinct+Platform+Core+Apps+and+Libraries) before using your device to test your Backbone integration.
 
 ## Hello Backbone!
 
