@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<trimble-data-permissions>
+    <protected-data-provider package="com.trimble.ttm.backbone">
+        <action name="read">
+            <resource>vehicle/ecm/engine/on</resource>
+            <resource>vehicle/ecm/ignition</resource>
+            <resource>vehicle/ecm/speed_kmh</resource>
+            <resource>vehicle/ecm/odometer_km</resource>
+            <resource>vehicle/ecm/engine/time_on_seconds</resource>
+            <resource>vehicle/gps_degrees</resource>
+        </action>
+    </protected-data-provider>
+</trimble-data-permissions>
