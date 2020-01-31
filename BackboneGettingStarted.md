@@ -4,7 +4,9 @@
 
 ### Get Artifactory Api Key
 
-1. Login to [https://trimbletransportation.jfrog.io/trimbletransportation](https://trimbletransportation.jfrog.io/trimbletransportation) with your Artifactory credentials that were supplied to you.
+If you don't have credentials to [https://trimbletransportation.jfrog.io/trimbletransportation](https://trimbletransportation.jfrog.io/trimbletransportation), send an email to ttm-jfrog-admin-ug@trimble.com to request them.
+
+1. Login to [https://trimbletransportation.jfrog.io/trimbletransportation](https://trimbletransportation.jfrog.io/trimbletransportation) with your Artifactory credentials that were supplied to you. 
 
 2. Click your username in the upper right:
 
@@ -31,7 +33,7 @@ allprojects {
             url = "https://trimbletransportation.jfrog.io/trimbletransportation/ttm-mvn-mobile-ecosystem"
             credentials {
                 username = tt_artifactory_username
-                password = tt_artifactory_api_key
+                password = tt_artifactory_password
             }
         }
     }
@@ -45,7 +47,7 @@ The default location is `USER_HOME/.gradle/gradle.properties` e.g. `C:\Users\<yo
 Then add:
 ```groovy
 tt_artifactory_username=michael_bayles@trimble.com
-tt_artifactory_api_key=************
+tt_artifactory_password=************
 ```
 
 You can see this in action in the [sample app](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/blob/master/sample-app/build.gradle).
@@ -54,11 +56,15 @@ You can see this in action in the [sample app](https://github.com/PeopleNet/trim
 
 You need to include the Backbone API in your project, for example, as a Gradle dependency:
 ```groovy
-implementation 'com.trimble:ttm-backbone-api:version'
+implementation 'com.trimble:ttm-mep-backbone-api:version'
 ```
 
  Versions can be found on the [releases page](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/releases)
 
 ## Installing Prerequisite APKs
 
-You will also need to install 2 applications onto your device for the Backbone to work. You can find them on the [releases page](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/releases).
+You will also need to install other platform applications onto your device for the Backbone to work. You can find them on the [releases page](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/releases).
+
+## Tablet Setup
+
+Follow [Tablet Setup Instructions] (https://confluence.trimble.tools/pages/viewpage.action?spaceKey=MAINE&title=Android+Developers%3A+Get+Started+with+Instinct+Platform+Core+Apps+and+Libraries) before using your device to test your Backbone integration.

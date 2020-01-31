@@ -14,12 +14,16 @@ make sure to view the [Backbone Setup Guide](BackboneGettingStarted.md) before p
 The next step is to include the Backbone API into your project, for example, as a Gradle dependency:
 
 ```groovy
-implementation 'com.trimble:ttm-backbone-api:version'
+implementation 'com.trimble:ttm-mep-backbone-api:version'
 ```
 
 Versions can be found on the [releases page](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/releases).
 
-You will also need to install 2 applications onto your device for the Backbone to work. You can also find them on the [releases page](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/releases).
+You will also need to install other platform applications onto your device for the Backbone to work. You can also find them on the [releases page](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/releases).
+
+## Tablet Setup
+
+Once you have installed the platform applications, you will need to follow some steps to set up your tablet to work with the Backbone.
 
 ## Hello Backbone!
 
