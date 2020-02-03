@@ -49,7 +49,7 @@ artifactory_user=michael_bayles@trimble.com
 artifactory_password=************
 ```
 
-You can see this in action in the [sample app](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/blob/master/sample-app/build.gradle).
+You can see this in action in the [sample app](https://bitbucket.trimble.tools/projects/MAINE/repos/ttm-mep-sample-app/browse/sample-app).
 
 ## Setting up the Dependencies
 
