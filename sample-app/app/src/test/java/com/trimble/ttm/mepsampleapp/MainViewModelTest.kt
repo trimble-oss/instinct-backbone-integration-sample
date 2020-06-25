@@ -6,7 +6,9 @@ package com.trimble.ttm.mepsampleapp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.trimble.ttm.backbone.api.*
+import com.trimble.ttm.backbone.api.Backbone
+import com.trimble.ttm.backbone.api.BackboneFactory
+import com.trimble.ttm.backbone.api.MultipleEntryQuery
 import com.trimble.ttm.backbone.api.data.*
 import com.trimble.ttm.mepsampleapp.view.BoxData
 import com.trimble.ttm.mepsampleapp.view.IgnitionState
@@ -60,7 +62,7 @@ class MainViewModelIgnitionTest {
 
     @Test
     fun `ignition should emit engine on when backbone says it is`() {
-        every { result[EngineOn] } returns Backbone.Entry(EngineOn(true, Date()), Date())
+        every { result[EngineOn] } returns Backbone.Entry(EngineOn(true, Date()), Date(), listOf())
 
         callback(result)
 
@@ -69,8 +71,8 @@ class MainViewModelIgnitionTest {
 
     @Test
     fun `ignition should emit accessory when backbone says engine off and ignition on`() {
-        every { result[EngineOn] } returns Backbone.Entry(EngineOn(false, Date()), Date())
-        every { result[Ignition] } returns Backbone.Entry(Ignition(true, Date()), Date())
+        every { result[EngineOn] } returns Backbone.Entry(EngineOn(false, Date()), Date(), listOf())
+        every { result[Ignition] } returns Backbone.Entry(Ignition(true, Date()), Date(), listOf())
 
         callback(result)
 
@@ -79,8 +81,8 @@ class MainViewModelIgnitionTest {
 
     @Test
     fun `ignition should emit off when backbone says engine off and ignition off`() {
-        every { result[EngineOn] } returns Backbone.Entry(EngineOn(false, Date()), Date())
-        every { result[Ignition] } returns Backbone.Entry(Ignition(false, Date()), Date())
+        every { result[EngineOn] } returns Backbone.Entry(EngineOn(false, Date()), Date(), listOf())
+        every { result[Ignition] } returns Backbone.Entry(Ignition(false, Date()), Date(), listOf())
 
         callback(result)
 
@@ -135,7 +137,7 @@ class MainViewModelSpeedTest {
 
     @Test
     fun `speed should emit backbone speed reading`() {
-        callback(Backbone.Entry(EngineSpeedKmh(110.2, Date()), Date()))
+        callback(Backbone.Entry(EngineSpeedKmh(110.2, Date()), Date(), listOf()))
 
         verify { observer.onChanged(110.2f) }
     }
@@ -181,10 +183,15 @@ class MainViewModelTripTest {
     fun `trip should emit Trip based on odometer and time engine on`() {
         every { result[EngineOdometerKm] } returns Backbone.Entry(
             EngineOdometerKm(4242.42, Date()),
-            Date()
+            Date(),
+            listOf()
         )
 
-        every { result[TimeEngineOn] } returns Backbone.Entry(TimeEngineOn(2, Date()), Date())
+        every { result[TimeEngineOn] } returns Backbone.Entry(
+            TimeEngineOn(2, Date()),
+            Date(),
+            listOf()
+        )
 
         callback.captured(result)
 
@@ -227,7 +234,8 @@ class MainViewModelLatencyTest {
         callback.captured(
             Backbone.Entry(
                 GpsDegrees(0.0, 0.0, 0.0, Date(), Date(1000000)),
-                Date(1001000)
+                Date(1001000),
+                listOf()
             )
         )
 

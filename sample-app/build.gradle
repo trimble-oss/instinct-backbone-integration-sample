@@ -31,7 +31,7 @@ allprojects {
             }
         }
         maven {
-            url = "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-maven"
+            url = "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-dev"
             credentials{
                 username = artifactory_user
                 password = artifactory_password
