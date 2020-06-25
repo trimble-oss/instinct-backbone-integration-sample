@@ -115,6 +115,8 @@ backbone
     .every(2, SECONDS)
     .handle { (speed, _) ->  }
 ```
+
+**Note:** *[Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-BKBN0/shared/build-latest/kdocs/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) could have a null data field. When the data field is null it means the value was deleted in Backbone. The [Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-BKBN0/shared/build-latest/kdocs/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) still contains a retrieved time and origin making it possible to determine when the value was deleted and which app deleted it.*
 ## When to monitor data for changes and when to fetch data periodically
 
 The logic for updating trip, at the top of the screen, retrieves [EngineOdometerKm](https://bamboo.trimble.tools/artifact/TME-BKBN0/shared/build-latest/kdocs/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-odometer-km) and [TimeEngineOn](https://bamboo.trimble.tools/artifact/TME-BKBN0/shared/build-latest/kdocs/api/build/kdocs/com.trimble.ttm.backbone.api.data/-time-engine-on) every minute.
