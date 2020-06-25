@@ -41,7 +41,7 @@ The logic for updating speedometer, in the center of the screen:
 backbone
     .retrieveDataFor(EngineSpeedKmh)
     .every(2, SECONDS)
-    .handle { (speed, _) -> _speed.postValue(speed.value.toFloat()) }
+    .handle { (speed, _) -> _speed.postValue(speed?.value?.toFloat() ?: 0f) }
 ```
 
 The logic for updating trip (how far/long current trip is), at the top of the screen:
@@ -51,12 +51,14 @@ backbone
     .every(1, MINUTES)
     .handle { result ->
         result[TimeEngineOn]?.let { (engineOn, _) ->
-            _trip.postValue(
-                updateTrip.with(
-                    odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0,
-                    timeEngineOn = engineOn.value
+            engineOn?.let { timeEngineOn ->
+                _trip.postValue(
+                    updateTrip.with(
+                        odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0,
+                        timeEngineOn = timeEngineOn.value
+                    )
                 )
-            )
+            }
         }
     }
 ```
@@ -79,7 +81,7 @@ private var timeEngineOn: Long = 0
 backbone.retrieveDataFor(EngineOdometerKm)
     .every(1, MINUTES)
     .handle {
-        odometer = it.data.value.toInt()
+        odometer = it?.data?.value?.toInt() ?: 0
         if (shouldUpdate) {
             _trip.postValue(updateTrip.with(odometer, timeEngineOn))
             shouldUpdate = false
@@ -91,7 +93,7 @@ backbone.retrieveDataFor(EngineOdometerKm)
 backbone.retrieveDataFor(TimeEngineOn)
     .every(1, MINUTES)
     .handle {
-        timeEngineOn = it.data.value
+        timeEngineOn = it?.data?.value ?; 0
         if (shouldUpdate) {
             _trip.postValue(updateTrip.with(odometer, timeEngineOn))
             shouldUpdate = false
