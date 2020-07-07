@@ -46,7 +46,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val speedStoppable = backbone
         .retrieveDataFor(EngineSpeedKmh)
         .every(2, SECONDS)
-        .handle { (speed, _) -> _speed.postValue(speed.value.toFloat()) }
+        .handle { (speed, _) -> _speed.postValue(speed?.value?.toFloat() ?: 0f) }
 
     private val tripStoppable = TripUpdater().let { updateTrip ->
         backbone
@@ -55,25 +55,30 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             .every(1, MINUTES)
             .handle { result ->
                 result[TimeEngineOn]?.let { (engineOn, _) ->
-                    _trip.postValue(
-                        updateTrip.with(
-                            odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0,
-                            timeEngineOn = engineOn.value
+                    engineOn?.let { timeEngineOn ->
+                        _trip.postValue(
+                            updateTrip.with(
+                                odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0,
+                                timeEngineOn = timeEngineOn.value
+                            )
                         )
-                    )
+                    }
                 }
             }
     }
 
-    private val latencyStoppable = LatencyCalculator(maxWindowSize = 1000).let { latencyCalculator ->
-        backbone
-            .monitorChangesInDataFor(GpsDegrees)
-            .handle { (gps, receivedTime) ->
-                val latencySeconds = (receivedTime.time - gps.sentTime.time) / 1000f
-                latencyCalculator.add(latencySeconds)
-                _latency.postValue(latencyCalculator.data)
-            }
-    }
+    private val latencyStoppable =
+        LatencyCalculator(maxWindowSize = 1000).let { latencyCalculator ->
+            backbone
+                .monitorChangesInDataFor(GpsDegrees)
+                .handle { (gps, receivedTime) ->
+                    gps?.run {
+                        val latencySeconds = (receivedTime.time - sentTime.time) / 1000f
+                        latencyCalculator.add(latencySeconds)
+                        _latency.postValue(latencyCalculator.data)
+                    }
+                }
+        }
 
     override fun onCleared() {
         super.onCleared()
