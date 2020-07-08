@@ -10,7 +10,7 @@ Please follow the [Backbone Setup Guide](../BackboneGettingStarted.md).
 
 ## Overview
 
-This sample app uses [Backbone](https://bamboo.trimble.tools/artifact/TME-CL/shared/build/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone) to retrieve and monitor data stored on the Backbone App.
+This sample app uses [Backbone](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-9/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone) to retrieve and monitor data stored on the Backbone App.
 
 In order to effectively use [Backbone](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-9/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone) The most important things to learn are:
 * What is a [Backbone.Retriever](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-9/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-retriever)
