@@ -6,32 +6,28 @@ package com.trimble.ttm.mepsampleapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private val model by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
+    private val model: MainViewModel by lazy { MainViewModel(application) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        model.ignition.observe(this, Observer {
+        model.ignition.observe(this, {
             ignition.set(it)
         })
 
-        model.speed.observe(this, Observer {
+        model.speed.observe(this, {
             speedometer.speedTo(it)
         })
 
-        model.trip.observe(this, Observer {
+        model.trip.observe(this, {
             trip.set(it)
         })
 
-        model.latency.observe(this, Observer {
+        model.latency.observe(this, {
             latency_chart.set(it)
         })
     }
