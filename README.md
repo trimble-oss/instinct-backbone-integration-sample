@@ -40,4 +40,4 @@ See [Unit Testing with the Backbone](BackboneUnitTesting.md) for some additional
 
 ## Additional Documentation
 
-The [sample app](https://bitbucket.trimble.tools/projects/MAINE/repos/ttm-mep-sample-app/browse/sample-app) includes links to help navigate through additional documentation like the [kDocs](https://bamboo.trimble.tools/artifact/TME-BKBN0/shared/build-latest/kdocs/api/build/kdocs//com.trimble.ttm.backbone.api/index.html) for the backbone api.
+The [sample app](https://bitbucket.trimble.tools/projects/MAINE/repos/ttm-mep-sample-app/browse/sample-app) includes links to help navigate through additional documentation like the [kDocs](https://bitbucket.trimble.tools/projects/MAINE/repos/ttm-mep-core-libraries/browse/backbone/api) for the backbone api.
