@@ -1,6 +1,8 @@
 #!/bin/sh
 
-cd sample-app || exit 1
+set -o errexit
+
+cd sample-app
 
 ./gradlew clean build -x lint -x test --stacktrace \
   -Ptt_artifactory_username="$ARTIFACTORY_USER" \
