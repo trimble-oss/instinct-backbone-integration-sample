@@ -1,0 +1,36 @@
+---
+global:
+  ORG: TTM
+  REPO: ttm-mep-sample-app
+  BUILDSTATUS_TO_BITBUCKET_USERNAME: svcacct_ttm_devops_ci
+  BUILDSTATUS_TO_BITBUCKET_PWD_ENVVAR_NAME: BITBUCKET_API_TOKEN
+  AGENT: bk-agents-gke
+steps:
+  # Test
+  - name: android-gradle-build
+    properties:
+      KEY_NAME: test
+      LABEL_SUFFIX: 'Testing :test_tube:'
+      BRANCHES: "*"
+      UPLOAD_ARTIFACTS:
+        # Lint and unit test reports for debugging
+        - "sample-app/app/build/reports/lint-results-*.html"
+        - "sample-app/app/build/reports/tests/**/classes/*.html"
+      ARTIFACTORY_USER: "ARTIFACTORY_USER"
+      ARTIFACTORY_PASSWORD: "ARTIFACTORY_PASSWORD"
+      JAVA_VERSION: "11"
+      GRADLE_COMMAND: ./.bpac/test.sh
+
+  # Build
+  - name: android-gradle-build
+    properties:
+      KEY_NAME: build
+      LABEL_SUFFIX: 'Building :wrench:'
+      BRANCHES: "*"
+      UPLOAD_ARTIFACTS:
+        # Lint and unit test reports for debugging
+        - "**/*.apk"
+      ARTIFACTORY_USER: "ARTIFACTORY_USER"
+      ARTIFACTORY_PASSWORD: "ARTIFACTORY_PASSWORD"
+      JAVA_VERSION: "11"
+      GRADLE_COMMAND: ./.bpac/build.sh
