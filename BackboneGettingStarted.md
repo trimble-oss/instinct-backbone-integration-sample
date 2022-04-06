@@ -61,7 +61,7 @@ implementation('com.trimble:ttm-mep-backbone-api:1.1.0-SNAPSHOT') {
 ```
 When a release is ready, you would change this to, e.g.,:
 ```groovy
-implementation 'com.trimble:ttm-mep-backbone-api:2.0.0') 
+implementation 'com.trimble:ttm-mep-backbone-api:2.0.0' 
 ```
 
 ## Tablet Setup

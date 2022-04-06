@@ -1,5 +1,5 @@
 /*
- * © 2021 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
+ * © 2022 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -24,15 +24,8 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            url = "https://trimbletransportation.jfrog.io/trimbletransportation/ttm-mvn-mobile-ecosystem"
+            url "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-maven"
             credentials {
-                username = tt_artifactory_username
-                password = tt_artifactory_password
-            }
-        }
-        maven {
-            url = "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-dev"
-            credentials{
                 username = artifactory_user
                 password = artifactory_password
             }
