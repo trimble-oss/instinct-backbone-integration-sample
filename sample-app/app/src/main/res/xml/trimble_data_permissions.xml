@@ -8,6 +8,9 @@
             <resource>vehicle/ecm/odometer_km</resource>
             <resource>vehicle/ecm/engine/time_on_seconds</resource>
             <resource>vehicle/gps_degrees</resource>
+            <resource>user/current</resource>
+            <resource>user/name/v2</resource>
+            <resource>vehicle/customerid</resource>
         </action>
     </protected-data-provider>
 </trimble-data-permissions>
