@@ -1,34 +1,46 @@
 /*
- * © 2019 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
+ * © 2022 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
  */
 
 package com.trimble.ttm.mepsampleapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import com.trimble.ttm.mepsampleapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private val model: MainViewModel by lazy { MainViewModel(application) }
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        model.ignition.observe(this, {
-            ignition.set(it)
-        })
+        model.ignition.observe(this) {
+            binding.ignition.set(it)
+        }
 
-        model.speed.observe(this, {
-            speedometer.speedTo(it)
-        })
+        model.speed.observe(this) {
+            binding.speedometer.speedTo(it)
+        }
 
-        model.trip.observe(this, {
-            trip.set(it)
-        })
+        model.customerId.observe(this) {
+            binding.cidView.text = "CID: ${it.value}"
+        }
 
-        model.latency.observe(this, {
-            latency_chart.set(it)
-        })
+        model.userName.observe(this) {
+            it.let {
+                binding.userInfoView?.text = "Name: ${it.firstName} ${it.lastName}"
+            }
+        }
+
+        model.trip.observe(this) {
+            binding.trip.set(it)
+        }
+
+        model.latency.observe(this) {
+            binding.latencyChart.set(it)
+        }
     }
 }

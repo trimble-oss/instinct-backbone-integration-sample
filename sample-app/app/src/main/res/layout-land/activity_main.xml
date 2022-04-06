@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ © 2019 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ © 2022 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:orientation="vertical"
-                                                   android:background="@color/colorBackground"
-                                                   tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <com.trimble.ttm.mepsampleapp.view.BoxChart
         android:id="@+id/latency_chart"
@@ -18,69 +17,92 @@
         android:layout_height="match_parent"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
+        app:boxColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/speedometer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:textColor="@color/colorText"
-        app:boxColor="@color/colorAccent"
-        app:whiskerColor="@color/colorAccent"
         app:medianColor="@android:color/white"
-        app:medianWidth="4"/>
+        app:medianWidth="4"
+        app:textColor="@color/colorText"
+        app:whiskerColor="@color/colorAccent" />
 
     <TextView
-            android:id="@+id/ignition_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Ignition"
-            app:layout_constraintBottom_toTopOf="@+id/ignition"
-            app:layout_constraintStart_toStartOf="@id/ignition"
-            app:layout_constraintEnd_toEndOf="@id/ignition"/>
+        android:id="@+id/ignition_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Ignition"
+        app:layout_constraintBottom_toTopOf="@+id/ignition"
+        app:layout_constraintEnd_toEndOf="@id/ignition"
+        app:layout_constraintStart_toStartOf="@id/ignition" />
 
     <com.trimble.ttm.mepsampleapp.view.IgnitionView
-            android:id="@+id/ignition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/speedometer"
-            app:vertical="true"
-            android:layout_marginStart="8dp"/>
+        android:id="@+id/ignition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/speedometer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:vertical="true" />
 
     <TextView
-            android:id="@+id/trip_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Trip"
-            android:textColor="@color/colorText"
-            app:layout_constraintBottom_toTopOf="@+id/trip"
-            app:layout_constraintEnd_toEndOf="@+id/trip"
-            app:layout_constraintStart_toStartOf="@+id/trip"/>
+        android:id="@+id/trip_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trip"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toTopOf="@+id/trip"
+        app:layout_constraintEnd_toEndOf="@+id/trip"
+        app:layout_constraintStart_toStartOf="@+id/trip" />
 
     <com.github.anastr.speedviewlib.AwesomeSpeedometer
-            android:id="@+id/speedometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:sv_withTremble="false"/>
+        android:id="@+id/speedometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:sv_withTremble="false" />
 
     <com.trimble.ttm.mepsampleapp.view.TripView
-            android:id="@+id/trip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/speedometer"
-            app:layout_constraintEnd_toEndOf="@+id/speedometer"
-            app:layout_constraintStart_toStartOf="@+id/speedometer"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:id="@+id/trip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/speedometer"
+        app:layout_constraintEnd_toEndOf="@+id/speedometer"
+        app:layout_constraintStart_toStartOf="@+id/speedometer"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userInfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/ignition_label"
+        app:layout_constraintEnd_toEndOf="@+id/ignition"
+        app:layout_constraintHorizontal_bias="0.681"
+        app:layout_constraintStart_toStartOf="@+id/ignition"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.377" />
+
+    <TextView
+        android:id="@+id/cidView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/ignition_label"
+        app:layout_constraintEnd_toEndOf="@+id/ignition"
+        app:layout_constraintHorizontal_bias="0.681"
+        app:layout_constraintStart_toStartOf="@+id/ignition"
+        app:layout_constraintTop_toBottomOf="@+id/userInfoView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
