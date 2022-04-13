@@ -40,7 +40,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         .alsoMonitor(CurrentUser)
         .handle { result ->
             result[CurrentUser]?.data?.let {
-
                 result[UserName]?.data?.get(it)?.let {
                     _userName.postValue(it)
                 }

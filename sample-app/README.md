@@ -188,3 +188,16 @@ backbone
     }
 ```
 
+The logic for getting user data is shown below. It is slightly more convoluted because UserName is a map where is the UserId is the key. So whenever we get Username we also get the CurrentUser since it contains the userId so we can get UserName object correlated to the current user.
+```kotlin
+backbone
+    .monitorChangesInDataFor(UserName)
+    .alsoMonitor(CurrentUser)
+    .handle { result ->
+        result[CurrentUser]?.data?.let {
+            result[UserName]?.data?.get(it)?.let {
+            
+            }
+        }
+    }
+```

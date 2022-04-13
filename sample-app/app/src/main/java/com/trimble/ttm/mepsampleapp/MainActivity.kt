@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         model.userName.observe(this) {
             it.let {
-                binding.userInfoView?.text = "Name: ${it.firstName} ${it.lastName}"
+                binding.userInfoView.text = "Name: ${it.firstName} ${it.lastName}"
             }
         }
 
