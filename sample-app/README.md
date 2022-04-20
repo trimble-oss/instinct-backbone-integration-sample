@@ -153,13 +153,13 @@ backbone
 
 In most vehicles, the EngineOdometerKm and TimeEngineOn are updated every 2 seconds.
 
-If trip was updated everytime, EngineOdometerKm or TimeEngineOn,
-there would be many updates, with no UI change, because trip shows travel time in seconds and distance in KM.
+If trip was updated everytime EngineOdometerKm or TimeEngineOn is changed,
+there would be many updates with no UI change, because trip shows travel time in seconds and distance in KM.
 
 The sample app retrieves trip data every minute to limit the amount of expensive Inter-Process Communication (IPC).
 
 On the other hand, Ignition and EngineOn change only at the end of a driver's trip.
-If the query ran periodically, there would be many updates with no change in the UI. 
+If the query ran periodically, there would be many updates with no UI change. 
 It would also be likely for Ignition or EngineOn to change between period completions, causing the UI update to be delayed.
 
 Instead of periodically forcing a fetch, the sample app asks Backbone to send Ignition and EngineOn when one of them changes.
