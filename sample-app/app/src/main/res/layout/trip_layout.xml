@@ -1,33 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ © 2019 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ © 2022 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:layout_width="wrap_content"
-                                                   android:layout_height="wrap_content"
-                                                   android:background="@drawable/border">
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/trip_distance"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="18sp"
-            android:layout_marginStart="4dp" android:layout_marginEnd="4dp"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/trip_time"
-            app:layout_constraintTop_toBottomOf="@id/trip_distance"
-            app:layout_constraintStart_toStartOf="@id/trip_distance"
-            app:layout_constraintEnd_toEndOf="@id/trip_distance"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border">
 
+    <TextView
+        android:id="@+id/trip_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/trip_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/trip_distance"
+        app:layout_constraintStart_toStartOf="@id/trip_distance"
+        app:layout_constraintTop_toBottomOf="@id/trip_distance" />
 </merge>

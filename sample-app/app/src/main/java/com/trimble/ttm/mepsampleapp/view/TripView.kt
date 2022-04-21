@@ -1,5 +1,5 @@
 /*
- * © 2019 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
+ * © 2022 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
  */
 
 package com.trimble.ttm.mepsampleapp.view
@@ -7,9 +7,9 @@ package com.trimble.ttm.mepsampleapp.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.trimble.ttm.mepsampleapp.R
-import kotlinx.android.synthetic.main.trip_layout.view.*
 
 data class Trip(val durationSeconds: Long, val distanceKm: Int) {
     val duration: String = StringBuilder()
@@ -24,14 +24,21 @@ data class Trip(val durationSeconds: Long, val distanceKm: Int) {
 }
 
 class TripView(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
+
+    private var tripTime: TextView
+    private var tripDistance: TextView
+
     init {
-        View.inflate(context, R.layout.trip_layout, this)
+        View.inflate(context, R.layout.trip_layout, this).apply {
+            tripTime = findViewById(R.id.trip_time)
+            tripDistance = findViewById(R.id.trip_distance)
+        }
         set(Trip(0, 0))
     }
 
     fun set(trip: Trip) {
-        trip_time.text = trip.duration
-        trip_distance.text = trip.distance
+        tripTime.text = trip.duration
+        tripDistance.text = trip.distance
         invalidate()
         requestLayout()
     }
