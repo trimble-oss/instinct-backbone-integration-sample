@@ -27,7 +27,7 @@ In your Android projects root `build.gradle` add the Trimble Mobile Ecosystem ma
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven {
             url = "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-maven"
             credentials{
@@ -55,14 +55,19 @@ You can see this in action in the [sample app](https://bitbucket.trimble.tools/p
 
 You need to include the Backbone API in your project, for example, as a Gradle dependency:
 ```groovy
-implementation('com.trimble:ttm-mep-backbone-api:1.1.0-SNAPSHOT') {
+implementation('com.trimble:ttm-mep-backbone-api:5.2.0-SNAPSHOT') {
     changing = true
 }
 ```
 When a release is ready, you would change this to, e.g.,:
 ```groovy
-implementation 'com.trimble:ttm-mep-backbone-api:2.0.0') 
+implementation 'com.trimble:ttm-mep-backbone-api:5.2.0' 
 ```
+
+## Setting up without Artificatory Access
+
+If you do not have access to Artificatory you can also add the backbone aar file to the libs folder of the application, 
+and update the build.gradle file to include `*.aar` as was done in this project. 
 
 ## Tablet Setup
 

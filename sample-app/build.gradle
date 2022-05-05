@@ -1,18 +1,18 @@
 /*
- * © 2019 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
+ * © 2022 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.72'
+    ext.kotlin_version = '1.5.31'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
 
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:4.0.0')
+        classpath('com.android.tools.build:gradle:7.0.3')
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -22,21 +22,14 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-        maven {
-            url = "https://trimbletransportation.jfrog.io/trimbletransportation/ttm-mvn-mobile-ecosystem"
+        mavenCentral()
+        /* maven {
+            url "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-maven"
             credentials {
-                username = tt_artifactory_username
-                password = tt_artifactory_password
-            }
-        }
-        maven {
-            url = "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-dev"
-            credentials{
                 username = artifactory_user
                 password = artifactory_password
             }
-        }
+        } */
         maven { url 'https://jitpack.io' }
     }
 }

@@ -6,10 +6,8 @@ package com.trimble.ttm.mepsampleapp
 
 import com.trimble.ttm.mepsampleapp.view.Trip
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
 import org.junit.Before
 import org.junit.Test
-import java.util.*
 
 class TripUpdaterTest {
     private lateinit var tripUpdater: TripUpdater

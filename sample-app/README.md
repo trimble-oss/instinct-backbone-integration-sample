@@ -10,33 +10,33 @@ Please follow the [Backbone Setup Guide](../BackboneGettingStarted.md).
 
 ## Overview
 
-This sample app uses [Backbone](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone) to retrieve and monitor data stored on the Backbone App.
+This sample app uses Backbone to retrieve and monitor data stored in the Backbone App.
 
-In order to effectively use [Backbone](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone) The most important things to learn are:
-* What is a [Backbone.Retriever](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-retriever)
-* Difference between [SingleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-single-entry-query) and [MultipleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query)
+In order to effectively use Backbone, it is important to learn the following:
+* What is a Backbone.Retriever
+* Difference between SingleEntryQuery and MultipleEntryQuery
 * When to monitor data for changes and when to fetch data periodically
 
 ## What is a Backbone.Retriever
 
 Data in the Backbone app is stored as JSON and identified by a unique key. 
 
-[Backbone.Retrievers](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-retriever) contain the unique key and a method to map the JSON into a pre-defined data object.
+Backbone.Retrievers contains a unique key and a method to map the JSON into a pre-defined data object.
 
-In other words when you ask backbone to retrieve [GpsDegrees](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-gps-degrees/-companion)
-the returned [Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry)
-contains [GpsDegrees](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-gps-degrees) as data not JSON.
+In other words, when backbone is asked to retrieve GpsDegrees
+the returned Backbone.Entry
+contains GpsDegrees as data and not as a JSON.
 ```kotlin
 val gps: Backbone.Entry<GpsDegrees>? = backbone.retrieveDataFor(GpsDegrees).fetch()
 ```
 
-List of all [defined Backbone.Retrievers](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data)
+List of all defined Backbone.Retrievers
 
-**Note:** *All the [defined Backbone.Retrievers](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data) are [Companion Objects](https://kotlinlang.org/docs/tutorials/kotlin-for-py/objects-and-companion-objects.html#companion-objects) of the given data type. That's how [GpsDegrees](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-gps-degrees) is a data class and a [Backbone.Retriever](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-retriever).*
+**Note:** *All the defined Backbone.Retrievers are Companion Objects of the given data type. That's how GpsDegrees is a data class and a Backbone.Retriever.*
 
 ## Difference between SingleKeyQuery and MultipleKeyQuery
 
-The logic for updating speedometer, in the center of the screen:
+The logic for updating speedometer, at the center of the screen:
 ```kotlin
 backbone
     .retrieveDataFor(EngineSpeedKmh)
@@ -63,16 +63,15 @@ backbone
     }
 ```
 
-To calculate the duration of the current trip both [EngineOdometerKm](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-odometer-km) and [TimeEngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-time-engine-on) are needed.
-Unlike speed which uses a [SingleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-single-entry-query), trip uses a [MultipleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query).
+To calculate the duration of the current trip, both EngineOdometerKm and TimeEngineOn are necessary.
+A trip uses a MultipleEntryQuery, unlike speed which uses a SingleEntryQuery, 
 
-With a [SingleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-single-entry-query) a [Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) is returned directly
-but for a [MultipleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query) a [MultipleEntryQuery.Result](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query/-result) is returned.
-A [MultipleEntryQuery.Result](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query/-result) contains a [Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) for each queried [Backbone.Retriever](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-retriever).
+With a SingleEntryQuery, a Backbone.Entry is returned directly. However for a MultipleEntryQuery a MultipleEntryQuery.Result is returned.
+A MultipleEntryQuery.Result contains a Backbone.Entry for each queried Backbone.Retriever.
 
-Using a [MultipleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query) makes it easier to keep different data sources in sync.
-It also makes code easier to understand. 
-If we wanted to use only [SingleEntryQueries](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-single-entry-query) to calculate trip, we would have to do something like the much worse:
+Using a MultipleEntryQuery makes it easier to keep different data sources synchronized,
+it also makes code easier to understand. 
+If we wanted to use only SingleEntryQueries to calculate trip, we would have to do something that looks like this, which is not ideal:
 ```kotlin
 private var shouldUpdate = false
 private var odometer: Int = 0
@@ -103,12 +102,12 @@ backbone.retrieveDataFor(TimeEngineOn)
     }
 ```
 
-**Note:** *If Backbone does not have data for a desired [Backbone.Retriever](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-retriever) then the value in the [MultipleEntryQuery.Result](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query/-result) will be null.*
+**Note:** *If Backbone does not have data for a desired Backbone.Retriever then the value in the MultipleEntryQuery.Result will be null.*
 ```kotlin
 val odometer = result[EngineOdometerKm]?.data?.value?.toInt() ?: 0
 ```
 
-**Note:** *[Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) is a [Data Class](https://kotlinlang.org/docs/reference/data-classes.html#data-classes) so [destructuring declaration](https://kotlinlang.org/docs/reference/data-classes.html#data-classes-and-destructuring-declarations) can be used.*
+**Note:** *Backbone.Entry is a [Data Class](https://kotlinlang.org/docs/reference/data-classes.html#data-classes) so [destructuring declaration](https://kotlinlang.org/docs/reference/data-classes.html#data-classes-and-destructuring-declarations) can be used.*
 ```kotlin
 backbone
     .retrieveDataFor(EngineSpeedKmh)
@@ -116,10 +115,10 @@ backbone
     .handle { (speed, _) ->  }
 ```
 
-**Note:** *[Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) could have a null data field. When the data field is null it means the value was deleted in Backbone. The [Backbone.Entry](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) still contains a retrieved time and origin making it possible to determine when the value was deleted and which app deleted it.*
+**Note:** *Backbone.Entry could have a null data field. When the data field is null it means the value was deleted in Backbone. The Backbone.Entry still contains a retrieved time and origin making it possible to determine when the value was deleted and which app deleted it.*
 ## When to monitor data for changes and when to fetch data periodically
 
-The logic for updating trip, at the top of the screen, retrieves [EngineOdometerKm](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-odometer-km) and [TimeEngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-time-engine-on) every minute.
+The logic for updating trip, at the top of the screen, retrieves EngineOdometerKm and TimeEngineOn every minute.
 ```kotlin
 backbone
     .retrieveDataFor(EngineOdometerKm, TimeEngineOn)
@@ -136,7 +135,7 @@ backbone
     }
 ```
 
-The logic for updating Ignition, on the right of the screen, retrieves [Ignition](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-ignition) and [EngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-on) whenever one of the values change.
+The logic for updating Ignition, at the right of the screen retrieves Ignition and EngineOn whenever one of the values change.
 ```kotlin
 backbone
     .monitorChangesInDataFor(Ignition)
@@ -152,20 +151,20 @@ backbone
     }
 ```
 
-In most vehicles the [EngineOdometerKm](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-odometer-km) and [TimeEngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-time-engine-on) are updated every 2 seconds.
+In most vehicles, the EngineOdometerKm and TimeEngineOn are updated every 2 seconds.
 
-If trip was updated every time [EngineOdometerKm](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-odometer-km) or [TimeEngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-time-engine-on) was changed,
-there would be many updates, with no UI change, because trip shows travel time in seconds and distance in KM.
+If trip was updated everytime EngineOdometerKm or TimeEngineOn is changed,
+there would be many updates with no UI change, because trip shows travel time in seconds and distance in KM.
 
 The sample app retrieves trip data every minute to limit the amount of expensive Inter-Process Communication (IPC).
 
-On the other hand, [Ignition](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-ignition) and [EngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-on) change only at the ends of a driver's trip.
-If the query ran periodically there would be many updates with no UI change. 
-It would also be likely for [Ignition](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-ignition) or [EngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-on) to change between period completions, causing the UI update to be delayed.
+On the other hand, Ignition and EngineOn change only at the end of a driver's trip.
+If the query ran periodically, there would be many updates with no UI change. 
+It would also be likely for Ignition or EngineOn to change between period completions, causing the UI update to be delayed.
 
-Instead of periodically forcing a fetch, the sample app asks Backbone to send [Ignition](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-ignition) and [EngineOn](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api.data/-engine-on) when one of them changes.
+Instead of periodically forcing a fetch, the sample app asks Backbone to send Ignition and EngineOn when one of them changes.
 
-**Note:** *It's possible to create a [MultipleEntryQuery](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-multiple-entry-query) that retrieves extra [Backbone.Entries](https://bamboo.trimble.tools/artifact/TME-CL/shared/build-latest/kdocs/backbone/api/build/kdocs/com.trimble.ttm.backbone.api/-backbone/-entry) when monitored data changes.*
+**Note:** *It's possible to create a MultipleEntryQuery that retrieves extra Backbone.Entries when monitored data changes.*
 
 ```kotlin
 backbone
@@ -188,3 +187,16 @@ backbone
     }
 ```
 
+The logic for getting user data is shown below. It is slightly more convoluted because UserName is a map where is the userId is the key. So whenever we get UserName we also get the CurrentUser since it contains the userId so we can get UserName object correlated to the current user.
+```kotlin
+backbone
+    .monitorChangesInDataFor(UserName)
+    .alsoMonitor(CurrentUser)
+    .handle { result ->
+        result[CurrentUser]?.data?.let {
+            result[UserName]?.data?.get(it)?.let {
+            
+            }
+        }
+    }
+```
