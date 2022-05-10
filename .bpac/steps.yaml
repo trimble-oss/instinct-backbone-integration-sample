@@ -10,7 +10,7 @@ steps:
   - name: android-gradle-build
     properties:
       KEY_NAME: test
-      LABEL_SUFFIX: 'Testing :test_tube:'
+      LABEL_SUFFIX: "Testing :test_tube:"
       BRANCHES: "*"
       UPLOAD_ARTIFACTS:
         # Lint and unit test reports for debugging
@@ -25,7 +25,7 @@ steps:
   - name: android-gradle-build
     properties:
       KEY_NAME: build
-      LABEL_SUFFIX: 'Building :wrench:'
+      LABEL_SUFFIX: "Building :wrench:"
       BRANCHES: "*"
       UPLOAD_ARTIFACTS:
         # Lint and unit test reports for debugging
@@ -34,3 +34,25 @@ steps:
       ARTIFACTORY_PASSWORD: "ARTIFACTORY_PASSWORD"
       JAVA_VERSION: "11"
       GRADLE_COMMAND: ./.bpac/build.sh
+
+  # Publish to Github
+  - name: custom-user-commands
+    properties:
+      VERSION: v2
+      KEY: sync-github
+      AGENT: non-prod
+      BRANCHES: "feature/TMD-* master main"
+      DEPENDS_ON:
+        - build
+        - test
+      DOCKER_ENTRYPOINT: ""
+      LABEL_SUFFIX: 'Copy Source to Target Repository'
+      DOCKER_COMMAND:
+        - "sh"
+        - "-c"
+        - "apk add rsync && apk add bash && bash ./.bpac/gitsync.sh"
+      DOCKER_IMAGE_NAME: docker.io/alpine/git:v2.34.2
+      DOCKER_ENVS:
+        - "TARGET_REPOSITORY=ssh://git@github.com/peoplenet/ttm-mep-sample-app"
+        - "TARGET_BRANCH=main"
+        - "IGNORE_FILE=./.syncignore"
