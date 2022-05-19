@@ -2,11 +2,11 @@
 
 This guide will show some basic unit testing you can include in your app that interacts with the Backbone.
 All examples are using [JUnit4](https://junit.org/junit4/) and [mockk](https://mockk.io).
-You can see also view actual tests written in the [sample app](https://github.com/PeopleNet/trimble-mobile-ecosystem-platform/tree/master/sample-app/app/src/test/java/com/trimble/ttm/mepsampleapp).
+You can see also view actual tests written in the sample app.
 
 ## Mocking the Backbone
 
-The first thing you'll want to do is mock the [BackboneFactory](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-factory/). Note that this is a static class.
+The first thing you'll want to do is mock the BackboneFactory. Note that this is a static class.
  You only need to do this once per test, so using [@Before](https://junit.org/junit4/javadoc/4.12/org/junit/Before.html) or similar
 can help reduce duplication. [Mockk has some special
 annotations](https://mockk.io/#annotations) to help even further.
@@ -25,9 +25,9 @@ every { BackboneFactory.rxBackbone(any()) } returns rxBackbone
 
 ## Mocking Synchronous Fetch Results
 
-All flavors can grab the latest data from the Backbone using [fetch](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone/fetch.html).
+All flavors can grab the latest data from the Backbone using fetch.
 
-You probably won't be interacting with a raw [BackboneData](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/) object much, but rather the value inside of it via [valueAs](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-backbone-data/value-as.html). This makes mocking fetched data very easy.
+You probably won't be interacting with a raw BackboneData object much, but rather the value inside of it via valueAs. This makes mocking fetched data very easy.
 
 Maybe your app has some logic to show some warning based on the odometer going over some threshold:
 
@@ -109,7 +109,7 @@ fun `should enable warning when odometer above threshold`() {
 
 ## Mocking RxBackbone Results
 
-Finally, if you are using the [RxBackbone](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-rx-backbone/), your tests will also look different. You will need to create a [PublishSubject](http://reactivex.io/RxJava/javadoc/io/reactivex/subjects/PublishSubject.html) and call `onNext` with your mocked data:
+Finally, if you are using the RxBackbone, your tests will also look different. You will need to create a [PublishSubject](http://reactivex.io/RxJava/javadoc/io/reactivex/subjects/PublishSubject.html) and call `onNext` with your mocked data:
 
 ```kotlin
 @RelaxedMockK
