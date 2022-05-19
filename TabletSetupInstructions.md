@@ -12,12 +12,12 @@ In order to test your app's integration, you will need to set up an Android tabl
     b. Samsung Tab Active 3 are well supported as that is what we are providing currently in the field.
     c. MSI Devices: PCT1 is not supported. PCT2 has been tested. Support for other MSI devices has not been fully tested or completed yet.
     d. Make sure the core Instinct applications are installed. For the sample app the following applications are needed: 
-        Instinct Core Services
-        System Setup
-        Vehicle Data Services
-        eFleetSuite
-        Trimble Mobile Authenticator
-        App Launcher
+        Instinct Core Services,
+        System Setup,
+        Vehicle Data Services,
+        eFleetSuite,
+        Trimble Mobile Authenticator,
+        App Launcher,
         Watchdog
 2. Factory reset your Android device.
     a. You will be installing a new Trimble certificate, and you want to make sure any previous one is removed.
@@ -34,7 +34,7 @@ In order to avoid having to install using the EMM, we just use the TestDeviceOwn
    ![alt-text](./img/TestDeviceOwner.png "Sample App Screenshot")
 
 2. You will need to set values for Display ID. Simply press in the respective areas to get the dialog box.
-   ![alt-text](./img/TestDeviceOwnerDisplayId.png "TestDeviceOwnerApp")
+   ![alt-text](./img/TestDeviceOwnerDisplalyID.png "TestDeviceOwnerApp")
 
 Display ID is the tablet serial number. You don't have to set the actual serial number, but once you set a value it identifies your tablet to some backend systems. 
 You don't want to change that value once it is set, because it is part of a unique identifier used when obtaining a certificate.
@@ -67,7 +67,3 @@ and can not be the same as the DSN. When you have reached the final screen, you 
 After you run setup, the OBC connector publishes some additional values to the Backbone, like PFM customer Id (Cid), Obc id, and Truck Number (aka VehicleId in the Backbone).
 
 Next steps: Start developing!
-
-
-
-
