@@ -57,7 +57,7 @@ fun `should enable warning when odometer above threshold`() {
 
 ## Mocking CallbackBackbone Results
 
-If you are using the [CallbackBackbone](https://maine-docs.dev-public.connectedfleet.io/com.trimble.ttm.backbone.api/-callback-backbone/) to periodically fetch or monitor results, your tests look a bit different due to the asynchronous callback.
+If you are using the CallbackBackbone to periodically fetch or monitor results, your tests look a bit different due to the asynchronous callback.
 
 Your app will be supplying the callback lambda to observe new data, so in the test, we need to [capture](https://mockk.io/#capturing) the lambda via `captureLambda` and invoke it with mocked data:
 
