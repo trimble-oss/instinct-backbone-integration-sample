@@ -27,11 +27,11 @@ In order to test your app's integration, you will need to set up an Android tabl
 
 ## Test Device Owner
 
-As part of the install script, TestDeviceOwner was made the device owner. TestDeviceOwner is an app that we use to "fake" a couple values that will be provided by the EMM in the field. 
+TestDeviceOwner is an app that we use to "fake" a couple values that will be provided by the EMM in the field. 
 In order to avoid having to install using the EMM, we just use the TestDeviceOwner to set the values we need.
 
 1. Launch TestDeviceOwner. It should look something like this.
-   ![alt-text](./img/TestDeviceOwner.png "Sample App Screenshot")
+   ![alt-text](./img/TestDeviceOwner.png "TestDeviceOwnerApp")
 
 2. You will need to set values for Display ID. Simply press in the respective areas to get the dialog box.
    ![alt-text](./img/TestDeviceOwnerDisplalyID.png "TestDeviceOwnerApp")
@@ -48,10 +48,13 @@ Note: that if you use the same display ID but with differing levels of capitaliz
 6. After setting the values, restart your tablet.
 
 ## Obtaining a Device Certificate
-Open up the Core Services app. The app will display an 8 character string; e.g., ANC8WEYU. If instead you see an error, make sure you have a wifi connection, and hit the back button. This 8-character string needs to be registered in the web portal in order to download a certificate. Let a Trimble representative know what environment you are in, and then give them the 8 digit code so they can enroll the device, 
+This portion goes over manual enrollment. Manual enrollment is used mostly for development at the moment, but it can also be used if automatic enrollment fails.
+Open up the Core Services app, and then push the manual enrollment button.
+![alt-text](./img/DeviceEnrollmentCode.png "Core Services Screenshot")
+The app will display an 8 character string; e.g., ANC8WEYU. If instead you see an error, make sure you have a wifi connection, and hit the back button. This 8-character string needs to be registered in the web portal in order to download a certificate. Let a Trimble representative know what environment you are in, and then give them the 8 digit code so they can enroll the device, 
 and pretty soon the Core Services app should display a progress circle and then a green checkmark. At that point, the certificate is installed and you are ready to go!
 ![alt-text](./img/DeviceEnrollmentCheckmark.png "Core Services Screenshot")
-![alt-text](./img/DeviceEnrollmentRedX.png "Core Services Screenshot")
+
 
 After this, if you need to check if your tablet has a certificate, you can launch Instinct Core Services. If the green checkmark is there, you are good to go!
 

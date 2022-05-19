@@ -37,7 +37,7 @@ This is done using an access control lists (acl). Upon arrival your device will 
 Once your app is ready reach out to a Trimble rep to get those permissions setup remotely so your application will have those permissions in the field.
 Below is a list of values that might be useful for most users: 
 
-**Backbone.Retiever**   **Key for XML**
+**Backbone.Retriever**   **Key for XML**
 BusinessAdminName       `business/admin/name`
 DisplayId               `display/id`
 Environment             `environment`

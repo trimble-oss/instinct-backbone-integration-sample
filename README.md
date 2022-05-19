@@ -25,8 +25,9 @@ Please follow the [Tablet Setup Instructions](TabletSetupInstructions.md).
 
 The sample app does a great job demonstrating a lot of the Backbone's functionality.
 
-## Unit Testing
+## Backbone Usage and Unit Testing
 
+An in depth explanation of how to use backbone can be found in the [README](./sample-app/README.md) of the sample app. It will go over usage, and setup in a more depth manner, and provide examples.
 Creating unit tests for your application that interact with Backbone is possible via [mocking](https://en.wikipedia.org/wiki/Mock_object).
 
 [Mockito](https://site.mockito.org/) and [Mockk](https://mockk.io) make this very easy. The sample app has some very good examples.
