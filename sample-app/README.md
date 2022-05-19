@@ -37,47 +37,46 @@ This is done using an access control lists (acl). Upon arrival your device will 
 Once your app is ready reach out to a Trimble rep to get those permissions setup remotely so your application will have those permissions in the field.
 Below is a list of values that might be useful for most users: 
 
-**Backbone.Retriever**   **Key for XML**
-BusinessAdminName       `business/admin/name`
-DisplayId               `display/id`
-Environment             `environment`
-ActiveHOSRuleSet        `user/eld/active_hos_ruleset`
-CurrentUser             `user/current`
-CurrentDriver           `user/current_driver`
-EldDriverId             `eld/driver/id`
-Motion                  `vehicle/motion`
-Shipments              `vehicle/eld/shipments`
-Trailers                `vehicle/eld/trailers`
-UserAvailableTime       `user/eld/available/time`
-UserEldExemptions       `user/eld/exemptions`
-UserEldRuleSet          `user/eld/rule_set_id`
-UserEldStatus           `user/eld/status`
-UserEldThirdPartyId     `user/eld/third_party_id`
-UserTripDistanceKm      `user/eld/distance_driven_today_km`
-UserLogInStatus         `user/login/status`
-UserName                `user/name/v2`
-UserTID                 `user/trimble/id`
-CustomerId              `vehicle/customerid`
-GpsDegrees              `vehicle/gps_degrees`
-ObcCellDataConnection   `vehicle/obc/network/cellular/data_connection`
-ObcConnection           `vehicle/obc/connection`
-ObcId                   `vehicle/obc/id`
-VehicleCurrentGear      `vehicle/current_gear`
-VehicleTurnSignal       `vehicle/turn_signal`
+**Backbone.Retriever**   **Key for XML**\
+BusinessAdminName       `business/admin/name`\
+DisplayId               `display/id`\
+Environment             `environment`\
+ActiveHOSRuleSet        `user/eld/active_hos_ruleset`\
+CurrentUser             `user/current`\
+CurrentDriver           `user/current_driver`\
+EldDriverId             `eld/driver/id`\
+Motion                  `vehicle/motion`\
+Shipments              `vehicle/eld/shipments`\
+Trailers                `vehicle/eld/trailers`\
+UserAvailableTime       `user/eld/available/time`\
+UserEldExemptions       `user/eld/exemptions`\
+UserEldRuleSet          `user/eld/rule_set_id`\
+UserEldStatus           `user/eld/status`\
+UserEldThirdPartyId     `user/eld/third_party_id`\
+UserTripDistanceKm      `user/eld/distance_driven_today_km`\
+UserLogInStatus         `user/login/status`\
+UserName                `user/name/v2`\
+UserTID                 `user/trimble/id`\
+CustomerId              `vehicle/customerid`\
+GpsDegrees              `vehicle/gps_degrees`\
+ObcCellDataConnection   `vehicle/obc/network/cellular/data_connection`\
+ObcConnection           `vehicle/obc/connection`\
+ObcId                   `vehicle/obc/id`\
+VehicleCurrentGear      `vehicle/current_gear`\
+VehicleTurnSignal       `vehicle/turn_signal`\
 VehicleId               `vehicle/id`
 
-EcmConnection           `vehicle/ecm/connection`
-EngineHours             `vehicle/ecm/engine/hours`
-EngineOdometerKm        `vehicle/ecm/odometer_km`
-EngineOn                `vehicle/ecm/engine/on`
-EngineSpeedKmh          `vehicle/ecm/speed_kmh`
-Ignition                `vehicle/ecm/ignition`
-TimeEngineOn            `vehicle/ecm/engine/time_on_seconds`
-TotalFuelConsumed       `vehicle/ecm/engine/fuel_l`
+EcmConnection           `vehicle/ecm/connection`\
+EngineHours             `vehicle/ecm/engine/hours`\
+EngineOdometerKm        `vehicle/ecm/odometer_km`\
+EngineOn                `vehicle/ecm/engine/on`\
+EngineSpeedKmh          `vehicle/ecm/speed_kmh`\
+Ignition                `vehicle/ecm/ignition`\
+TimeEngineOn            `vehicle/ecm/engine/time_on_seconds`\
+TotalFuelConsumed       `vehicle/ecm/engine/fuel_l`\
 Vin                     `vehicle/ecm/vin`
 
-OerManualEnabled        `oer/manual_enabled`
-
+OerManualEnabled        `oer/manual_enabled`\
 WorkflowCurrentTrip     `workflow/current_trip`
 
 ## What is a Backbone.Retriever
