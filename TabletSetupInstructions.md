@@ -51,6 +51,7 @@ Note: that if you use the same display ID but with differing levels of capitaliz
 This portion goes over manual enrollment. Manual enrollment is used mostly for development at the moment, but it can also be used if automatic enrollment fails.
 Open up the Core Services app, and then push the manual enrollment button.
 ![alt-text](./img/DeviceEnrollmentCode.png "Core Services Screenshot")
+
 The app will display an 8 character string; e.g., ANC8WEYU. If instead you see an error, make sure you have a wifi connection, and hit the back button. This 8-character string needs to be registered in the web portal in order to download a certificate. Let a Trimble representative know what environment you are in, and then give them the 8 digit code so they can enroll the device, 
 and pretty soon the Core Services app should display a progress circle and then a green checkmark. At that point, the certificate is installed and you are ready to go!
 ![alt-text](./img/DeviceEnrollmentCheckmark.png "Core Services Screenshot")
