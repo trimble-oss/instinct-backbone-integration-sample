@@ -41,7 +41,7 @@ steps:
       VERSION: v2
       KEY: sync-github
       AGENT: non-prod
-      BRANCHES: "feature/TMD-* master main"
+      BRANCHES: "master main"
       DEPENDS_ON:
         - build
         - test
