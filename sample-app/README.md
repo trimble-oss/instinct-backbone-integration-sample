@@ -33,7 +33,7 @@ res/xml/trimble_data_permissions.xml
 </trimble-data-permissions>
 
 You will need to add each value you want to read to the file otherwise your application will not have permission. This is done for security reasons so only authorized apps can use the backbone. 
-This is done using an access control lists (acl). Upon arrival your device will likely have local acls so this file alone will be enough. 
+This is done using an access control list (acl). Upon arrival your device will likely have local acls so this file alone will be enough. 
 Once your app is ready reach out to a Trimble rep to get those permissions setup remotely so your application will have those permissions in the field.
 Below is a list of values that might be useful for most users: 
 
