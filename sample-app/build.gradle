@@ -23,13 +23,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        /* maven {
-            url "https://artifactory.trimble.tools/artifactory/ttm-mobile-ecosystem-maven"
-            credentials {
-                username = artifactory_user
-                password = artifactory_password
-            }
-        } */
         maven { url 'https://jitpack.io' }
     }
 }
