@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-You will not be able to build this project until you set up access to the Trimble Artifactory Repo.
+You will not be able to build and run this project until you have Trimble hardware setup with Instinct pre-installed on the devices.
 
 Please follow the [Backbone Setup Guide](../BackboneGettingStarted.md).
 
@@ -64,7 +64,8 @@ ObcConnection           `vehicle/obc/connection`\
 ObcId                   `vehicle/obc/id`\
 VehicleCurrentGear      `vehicle/current_gear`\
 VehicleTurnSignal       `vehicle/turn_signal`\
-VehicleId               `vehicle/id`
+VehicleId               `vehicle/id`\
+VehiclePublic           `vehicle/public`
 
 EcmConnection           `vehicle/ecm/connection`\
 EngineHours             `vehicle/ecm/engine/hours`\
@@ -262,3 +263,14 @@ backbone
         }
     }
 ```
+
+##  Backbone API Documentation
+Below are some API examples provided for the backbone.
+
+[Current User](./Backbone%20Documentation/data/current-user/index.md)\
+[Engine Odometer](./Backbone%20Documentation/data/engine-odometer-km/index.md)\
+[Engine On](./Backbone%20Documentation/data/engine-on/index.md)\
+[Engine Speed KMH](./Backbone%20Documentation/data/engine-speed-kmh/index.md)\
+[GPS Degrees](./Backbone%20Documentation/data/gps-degrees/index.md)\
+[Ignition](./Backbone%20Documentation/data/ignition/index.md)\
+[User Name](./Backbone%20Documentation/data/user-name/index.md)
