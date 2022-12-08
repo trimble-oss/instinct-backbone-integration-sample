@@ -17,6 +17,8 @@ In order to effectively use Backbone, it is important to learn the following:
 * What is a Backbone.Retriever
 * Difference between SingleEntryQuery and MultipleEntryQuery
 * When to monitor data for changes and when to fetch data periodically
+* How to get official Trimble approval of production App
+
 
 
 ## What is Access Control List (ACL)
@@ -27,7 +29,7 @@ Add the following file to res/xml in your app:
 ```xml
 res/xml/trimble_data_permissions.xml
 ```
-* Contents of the 'trimble_data_permissions.xml" for the key which can be found in the 'Backbone Retriever/Key for Access Control List' below using the CustomerId as an example.
+* Contents of the 'trimble_data_permissions.xml' for the key which can be found in the 'Backbone Retriever/Key for Access Control List' below using the CustomerId as an example.
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <trimble-data-permissions>
@@ -87,7 +89,7 @@ res/xml/trimble_data_permissions.xml
 
 Data in the Backbone app is stored as JSON and identified by a unique key. 
 
-Backbone.Retrievers contains a unique key and a method to map the JSON into a pre-defined data object.
+Backbone.Retrievers contain a unique key and a method to map the JSON into a pre-defined data object.
 
 In other words, when backbone is asked to retrieve GpsDegrees
 the returned Backbone.Entry
@@ -95,9 +97,6 @@ contains GpsDegrees as data and not as a JSON.
 ```kotlin
 val gps: Backbone.Entry<GpsDegrees>? = backbone.retrieveDataFor(GpsDegrees).fetch()
 ```
-
-List of all defined Backbone.Retrievers
-
 **Note:** *All the defined Backbone.Retrievers are Companion Objects of the given data type. That's how GpsDegrees is a data class and a Backbone.Retriever.*
 
 ## Difference between SingleKeyQuery and MultipleKeyQuery
@@ -266,6 +265,16 @@ backbone
         }
     }
 ```
+
+## How to get official Trimble approval of production App
+Ready to release an official application that is integrated with the Backbone?
+Because of the security model on the Instinct system your application must be submitted and be approved for operations within the Trimble environment.
+Below are the next steps:
+* Contact your Trimble representative that you have completed your integration and testing of your application.
+* Provide a production ready version of your apk which you plan to be released.
+* Provide the "trimble_data_permissions.xml" file which was used in the application.
+* Once the approval process has been completed, your Trimble representative will notify you.
+
 
 ##  Backbone API Documentation
 Below are some API examples provided for the backbone.
