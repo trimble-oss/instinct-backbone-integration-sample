@@ -1,12 +1,12 @@
 # Trimble Mobile Ecosystem Data Backbone Sample App
 
-![alt-text](../img/SampleAppView.png "Sample App Screenshot")
+![alt-text](img/SampleAppView.png "Sample App Screenshot")
 
 ## Getting Started
 
 You will not be able to build and run this project until you have Trimble hardware setup with Instinct pre-installed on the devices.
 
-Please follow the [Backbone Setup Guide](../BackboneGettingStarted.md).
+Please follow the [Backbone Setup Guide](doc/BackboneGettingStarted.md).
 
 ## Overview
 
@@ -267,10 +267,10 @@ backbone
 ##  Backbone API Documentation
 Below are some API examples provided for the backbone.
 
-[Current User](./Backbone%20Documentation/data/current-user/index.md)\
-[Engine Odometer](./Backbone%20Documentation/data/engine-odometer-km/index.md)\
-[Engine On](./Backbone%20Documentation/data/engine-on/index.md)\
-[Engine Speed KMH](./Backbone%20Documentation/data/engine-speed-kmh/index.md)\
-[GPS Degrees](./Backbone%20Documentation/data/gps-degrees/index.md)\
-[Ignition](./Backbone%20Documentation/data/ignition/index.md)\
-[User Name](./Backbone%20Documentation/data/user-name/index.md)
+[Current User](sample-app/Backbone%20Documentation/data/current-user/index.md)\
+[Engine Odometer](sample-app/Backbone%20Documentation/data/engine-odometer-km/index.md)\
+[Engine On](sample-app/Backbone%20Documentation/data/engine-on/index.md)\
+[Engine Speed KMH](sample-app/Backbone%20Documentation/data/engine-speed-kmh/index.md)\
+[GPS Degrees](sample-app/Backbone%20Documentation/data/gps-degrees/index.md)\
+[Ignition](sample-app/Backbone%20Documentation/data/ignition/index.md)\
+[User Name](sample-app/Backbone%20Documentation/data/user-name/index.md)
