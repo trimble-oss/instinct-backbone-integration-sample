@@ -267,8 +267,8 @@ backbone
 ```
 
 ## How to get official Trimble approval of production App
-Ready to release an official application that is integrated with the Backbone?
-Because of the security model on the Instinct system your application must be submitted and be approved for operations within the Trimble environment.
+Ready to release an official application that is integrated with the Backbone?\
+Because of the security model on the Instinct system your application must be submitted and be approved for operations within the Trimble environment.\
 Below are the next steps:
 * Contact your Trimble representative that you have completed your integration and testing of your application.
 * Provide a production ready version of your apk which you plan to be released.
