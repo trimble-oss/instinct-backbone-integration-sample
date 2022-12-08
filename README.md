@@ -13,13 +13,13 @@ Please follow the [Backbone Setup Guide](doc/BackboneGettingStarted.md).
 This sample app uses Backbone to retrieve and monitor data stored in the Backbone App.
 
 In order to effectively use Backbone, it is important to learn the following:
-* What is an Access Control List
+* What is an Access Control List (ACL)
 * What is a Backbone.Retriever
 * Difference between SingleEntryQuery and MultipleEntryQuery
 * When to monitor data for changes and when to fetch data periodically
 
 
-## Backbone Access Control List (ACL)
+## What is Access Control List (ACL)
 The access control list is used for getting access to data within the Backbone system.
 
 * Android Studio xml File location within project
