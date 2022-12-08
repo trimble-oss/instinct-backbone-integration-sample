@@ -13,5 +13,5 @@ dependencies {
 
 ## Tablet Setup
 
-It is currently required that hardware be supplied by Trimble to operate the sample application source code, so that it is integrated into the Instinct ecosystem.
-Contact your Trimble contact for getting hardware to run this sample application.
+It is currently required that hardware be supplied by Trimble to operate the sample application source code, so that it is integrated into the Instinct ecosystem.\
+Contact your Trimble representive for getting the hardware needed to run this sample application.
