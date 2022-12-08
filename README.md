@@ -13,16 +13,22 @@ Please follow the [Backbone Setup Guide](doc/BackboneGettingStarted.md).
 This sample app uses Backbone to retrieve and monitor data stored in the Backbone App.
 
 In order to effectively use Backbone, it is important to learn the following:
+* What is an Access Control List
 * What is a Backbone.Retriever
 * Difference between SingleEntryQuery and MultipleEntryQuery
 * When to monitor data for changes and when to fetch data periodically
 
-## Use Backbone values
 
-**Read a Backbone Key**
-Suppose you want to read CustomerId from the backbone. You would add the following file to res/xml in your app:
+## Backbone Access Control List (ACL)
+The access control list is used for getting access to data within the Backbone system.
 
+* Android Studio xml File location within project
+Add the following file to res/xml in your app:
+```xml
 res/xml/trimble_data_permissions.xml
+```
+* Contents of the 'trimble_data_permissions.xml" for the key which can be found in the 'Backbone Retriever/Key for Access Control List' below using the CustomerId as an example.
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <trimble-data-permissions>
   <protected-data-provider package="com.trimble.ttm.backbone">
@@ -31,54 +37,51 @@ res/xml/trimble_data_permissions.xml
     </action>
   </protected-data-provider>
 </trimble-data-permissions>
+```
 
-You will need to add each value you want to read to the file otherwise your application will not have permission. This is done for security reasons so only authorized apps can use the backbone. 
-This is done using an access control list (acl). Upon arrival your device will likely have local acls so this file alone will be enough. 
-Once your app is ready reach out to a Trimble rep to get those permissions setup remotely so your application will have those permissions in the field.
-Below is a list of values that might be useful for most users: 
+* Backbone Retriever/ Key for Access Control List (ACL)
 
-**Backbone.Retriever**   **Key for XML**\
-BusinessAdminName       `business/admin/name`\
-DisplayId               `display/id`\
-Environment             `environment`\
-ActiveHOSRuleSet        `user/eld/active_hos_ruleset`\
-CurrentUser             `user/current`\
-CurrentDriver           `user/current_driver`\
-EldDriverId             `eld/driver/id`\
-Motion                  `vehicle/motion`\
-Shipments              `vehicle/eld/shipments`\
-Trailers                `vehicle/eld/trailers`\
-UserAvailableTime       `user/eld/available/time`\
-UserEldExemptions       `user/eld/exemptions`\
-UserEldRuleSet          `user/eld/rule_set_id`\
-UserEldStatus           `user/eld/status`\
-UserEldThirdPartyId     `user/eld/third_party_id`\
-UserTripDistanceKm      `user/eld/distance_driven_today_km`\
-UserLogInStatus         `user/login/status`\
-UserName                `user/name/v2`\
-UserTID                 `user/trimble/id`\
-CustomerId              `vehicle/customerid`\
-GpsDegrees              `vehicle/gps_degrees`\
-ObcCellDataConnection   `vehicle/obc/network/cellular/data_connection`\
-ObcConnection           `vehicle/obc/connection`\
-ObcId                   `vehicle/obc/id`\
-VehicleCurrentGear      `vehicle/current_gear`\
-VehicleTurnSignal       `vehicle/turn_signal`\
-VehicleId               `vehicle/id`\
-VehiclePublic           `vehicle/public`
-
-EcmConnection           `vehicle/ecm/connection`\
-EngineHours             `vehicle/ecm/engine/hours`\
-EngineOdometerKm        `vehicle/ecm/odometer_km`\
-EngineOn                `vehicle/ecm/engine/on`\
-EngineSpeedKmh          `vehicle/ecm/speed_kmh`\
-Ignition                `vehicle/ecm/ignition`\
-TimeEngineOn            `vehicle/ecm/engine/time_on_seconds`\
-TotalFuelConsumed       `vehicle/ecm/engine/fuel_l`\
-Vin                     `vehicle/ecm/vin`
-
-OerManualEnabled        `oer/manual_enabled`\
-WorkflowCurrentTrip     `workflow/current_trip`
+| **Backbone.Retriever** | **Key for XML**                                | 
+| :----------------      |:-----------------------------------------------| 
+| BusinessAdminName      | `business/admin/name`                          | 
+| DisplayId              | `display/id`                                   | 
+| Environment            | `environment`                                  | 
+| ActiveHOSRuleSet       | `user/eld/active_hos_ruleset`                  | 
+| CurrentUser            | `user/current`                                 | 
+| CurrentDriver          | `user/current_driver`                          | 
+| EldDriverId            | `eld/driver/id`                                | 
+| Motion                 | `vehicle/motion`                               | 
+| Shipments              | `vehicle/eld/shipments`                        | 
+| Trailers               | `vehicle/eld/trailers`                         | 
+| UserAvailableTime      | `user/eld/available/time`                      | 
+| UserEldExemptions      | `user/eld/exemptions`                          | 
+| UserEldRuleSet         | `user/eld/rule_set_id`                         | 
+| UserEldStatus          | `user/eld/status`                              | 
+| UserEldThirdPartyId    | `user/eld/third_party_id`                      | 
+| UserTripDistanceKm     | `user/eld/distance_driven_today_km`            | 
+| UserLogInStatus        | `user/login/status`                            | 
+| UserName               | `user/name/v2`                                 | 
+| UserTID                | `user/trimble/id`                              | 
+| CustomerId             | `vehicle/customerid`                           | 
+| GpsDegrees             | `vehicle/gps_degrees`                          | 
+| ObcCellDataConnection  | `vehicle/obc/network/cellular/data_connection` | 
+| ObcConnection          | `vehicle/obc/connection`                       | 
+| ObcId                  | `vehicle/obc/id`                               | 
+| VehicleCurrentGear     | `vehicle/current_gear`                         | 
+| VehicleTurnSignal      | `vehicle/turn_signal`                          | 
+| VehicleId              | `vehicle/id`                                   | 
+| VehiclePublic          | `vehicle/public`                               | 
+| EcmConnection          | `vehicle/ecm/connection`                       | 
+| EngineHours            | `vehicle/ecm/engine/hours`                     | 
+| EngineOdometerKm       | `vehicle/ecm/odometer_km`                      | 
+| EngineOn               | `vehicle/ecm/engine/on`                        | 
+| EngineSpeedKmh         | `vehicle/ecm/speed_kmh`                        | 
+| Ignition               | `vehicle/ecm/ignition`                         | 
+| TimeEngineOn           | `vehicle/ecm/engine/time_on_seconds`           | 
+| TotalFuelConsumed      | `vehicle/ecm/engine/fuel_l`                    | 
+| Vin                    | `vehicle/ecm/vin`                              | 
+| OerManualEnabled       | `oer/manual_enabled`                           | 
+| WorkflowCurrentTrip    | `workflow/current_trip`                        | 
 
 ## What is a Backbone.Retriever
 
