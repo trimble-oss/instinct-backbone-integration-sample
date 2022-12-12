@@ -4,7 +4,7 @@ set -o errexit
 
 cd sample-app
 
-./gradlew clean build -x lint -x test --stacktrace \
+./gradlew clean lint test build --stacktrace \
   -Ptt_artifactory_username="$ARTIFACTORY_USER" \
   -Ptt_artifactory_password="$ARTIFACTORY_PASSWORD" \
   -Partifactory_user="$ARTIFACTORY_USER" \
