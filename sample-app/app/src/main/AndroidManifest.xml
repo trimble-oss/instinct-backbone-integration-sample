@@ -2,8 +2,7 @@
   ~ © 2019 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.trimble.ttm.mepsampleapp">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"

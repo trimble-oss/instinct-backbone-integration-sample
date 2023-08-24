@@ -15,11 +15,13 @@ android {
         viewBinding true
         dataBinding = true
     }
-    compileSdkVersion 33
+    namespace 'com.trimble.ttm.mepsampleapp'
+
+    compileSdk 33
     defaultConfig {
         applicationId = 'com.trimble.ttm.mepsampleapp'
-        minSdkVersion 25
-        targetSdkVersion 33
+        minSdk 25
+        targetSdk 33
         versionCode = 1
         versionName = '1.0'
         testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
