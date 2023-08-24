@@ -2,10 +2,6 @@
  * © 2022 Trimble Inc. Used under license. All rights reserved. Unauthorized duplication, copying or use prohibited.
  */
 
-plugins {
-    id "com.jfrog.artifactory" version "4.7.5"
-}
-
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
