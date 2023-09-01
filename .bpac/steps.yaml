@@ -20,7 +20,7 @@ steps:
         - "sample-app/app/build/reports/tests/**/classes/*.html"
       ARTIFACTORY_USER: "ARTIFACTORY_USER"
       ARTIFACTORY_PASSWORD: "ARTIFACTORY_PASSWORD"
-      JAVA_VERSION: "11"
+      JAVA_VERSION: "17"
       GRADLE_COMMAND: ./.bpac/build.sh
 
   # Publish to Github
