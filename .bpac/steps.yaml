@@ -6,6 +6,12 @@ global:
   BUILDSTATUS_TO_BITBUCKET_PWD_ENVVAR_NAME: BITBUCKET_API_TOKEN
   AGENT: bk-agents-gke
 steps:
+  - name: git-tag
+    properties:
+      TAG_SOURCE: branch
+      TAG_SEARCH_PATTERN: "(release|hotfix)/[[:digit:]]+\\\\.[[:digit:]]+\\\\.[[:digit:]]+"
+      TAG_PATTERN: "[[:digit:]]+\\\\.[[:digit:]]+\\\\.[[:digit:]]+"
+
   # Build
   - name: android-gradle-build
     properties:
