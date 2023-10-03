@@ -9,7 +9,7 @@ steps:
   - name: git-tag
     properties:
       BRANCHES: "master"
-      TAG_SOURCE: branch
+      TAG_SOURCE: commit-msg
       TAG_SEARCH_PATTERN: "(release|hotfix)/[[:digit:]]+\\\\.[[:digit:]]+\\\\.[[:digit:]]+"
       TAG_PATTERN: "[[:digit:]]+\\\\.[[:digit:]]+\\\\.[[:digit:]]+"
 
