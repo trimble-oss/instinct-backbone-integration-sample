@@ -6,6 +6,13 @@ global:
   BUILDSTATUS_TO_BITBUCKET_PWD_ENVVAR_NAME: BITBUCKET_API_TOKEN
   AGENT: bk-agents-gke
 steps:
+  - name: git-tag
+    properties:
+      BRANCHES: "master"
+      TAG_SOURCE: commit-msg
+      TAG_SEARCH_PATTERN: "(release|hotfix)/[[:digit:]]+\\\\.[[:digit:]]+\\\\.[[:digit:]]+"
+      TAG_PATTERN: "[[:digit:]]+\\\\.[[:digit:]]+\\\\.[[:digit:]]+"
+
   # Build
   - name: android-gradle-build
     properties:
@@ -29,7 +36,7 @@ steps:
       VERSION: v2
       KEY: sync-github
       AGENT: non-prod
-      BRANCHES: "master main"
+      BRANCHES: "feature/TMD-1551"
       DEPENDS_ON:
         - build
       DOCKER_ENTRYPOINT: ""
@@ -39,6 +46,6 @@ steps:
         - "./.bpac/sync.sh"
       DOCKER_IMAGE_NAME: docker.io/alpine/git:v2.34.2
       DOCKER_ENVS:
-        - "TARGET_REPOSITORY=ssh://git@github.com/peoplenet/ttm-mep-sample-app"
-        - "TARGET_BRANCH=main"
+        - "TARGET_REPOSITORY=ssh://git@github.com/trimble-oss/instinct-backbone-integration-sample"
+        - "TARGET_BRANCH=feature/TMD-1551"
         - "IGNORE_FILE=./.syncignore"
