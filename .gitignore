@@ -1,18 +1,2 @@
-*.iml
-.gradle
-/local.properties
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-
-# Copyright configuration
-.idea/*
-sample-app/.idea/*
-!sample-app/.idea/copyright/
-!sample-app/.idea/scopes/
-sample-app/.idea/scopes/*
-!sample-app/.idea/scopes/Trimble_Sources.xml
-
-!sample-app/.idea/codeStyles
-!sample-app/.idea/saveactions_settings.xml
+.syncignore
+.bpac/
