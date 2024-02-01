@@ -37,7 +37,8 @@ main() {
 	fi
 
 	git config user.email "aws.preprod@peoplenetonline.com"
-  git config user.name "Hawkmoon Instinct"
+  	git config user.name "Hawkmoon Instinct"
+	git rm -r --cached .bpac/ .syncignore
 	git add .
 	git commit -m "Sync $(date +%F-%T)"
 	git push origin "$TARGET_BRANCH"

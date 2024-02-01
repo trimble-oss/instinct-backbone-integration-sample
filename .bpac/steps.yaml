@@ -36,7 +36,7 @@ steps:
       VERSION: v2
       KEY: sync-github
       AGENT: non-prod
-      BRANCHES: "master main"
+      BRANCHES: "master"
       DEPENDS_ON:
         - build
       DOCKER_ENTRYPOINT: ""
@@ -46,6 +46,6 @@ steps:
         - "./.bpac/sync.sh"
       DOCKER_IMAGE_NAME: docker.io/alpine/git:v2.34.2
       DOCKER_ENVS:
-        - "TARGET_REPOSITORY=ssh://git@github.com/peoplenet/ttm-mep-sample-app"
+        - "TARGET_REPOSITORY=ssh://git@github.com/trimble-oss/instinct-backbone-integration-sample"
         - "TARGET_BRANCH=main"
         - "IGNORE_FILE=./.syncignore"
