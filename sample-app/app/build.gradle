@@ -13,7 +13,7 @@ android {
     }
     namespace 'com.trimble.ttm.mepsampleapp'
 
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         applicationId = 'com.trimble.ttm.mepsampleapp'
         minSdk 25
@@ -38,14 +38,14 @@ android {
 }
 
 dependencies {
-    implementation 'com.trimble:ttm-mep-backbone-api:7.0.1'
+    implementation 'com.trimble:ttm-mep-backbone-api:7.3.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.6.1"
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.7.0"
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
 
     implementation 'com.github.anastr:speedviewlib:1.5.53'
