@@ -3,19 +3,11 @@
 The library for integrating with the Instinct backbone library can be found under the Maven Central Repository:
 ```kotlin
 
-buildscript {
-    ext.kotlin_version = '1.9.22'
-    repositories {
-        google()
-        mavenCentral()
-
-    }
-    
 allprojects {
     repositories {
-        google()
+        .... 
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        ....
     }
 }  
     
@@ -27,6 +19,7 @@ dependencies {
     implementation 'com.trimble:ttm-mep-backbone-api:7.3.0'
     ....
 }
+
 ```
 
 ## Tablet Setup
