@@ -1,14 +1,25 @@
 # Getting Started
 
-The library for integrating with the Instinct backbone library can be found under the following folder within the sample app:
+The library for integrating with the Instinct backbone library can be found under the Maven Central Repository:
 ```kotlin
-...\ttm-mep-sample-app\sample-app\app\libs
-```
+
+allprojects {
+    repositories {
+        .... 
+        mavenCentral()
+        ....
+    }
+}  
+    
 
 The library is referenced by the following Module's build.gradle file.
 ```kotlin
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    ....
+    implementation 'com.trimble:ttm-mep-backbone-api:7.6.0'
+    ....
+}
+
 ```
 
 ## Tablet Setup
