@@ -16,7 +16,7 @@ The library is referenced by the following Module's build.gradle file.
 ```kotlin
 dependencies {
     ....
-    implementation 'com.trimble:ttm-mep-backbone-api:7.3.0'
+    implementation 'com.trimble:ttm-mep-backbone-api:7.6.0'
     ....
 }
 
